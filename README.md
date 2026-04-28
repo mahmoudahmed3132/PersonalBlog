@@ -141,7 +141,8 @@ Recommended setup:
 
 1. Create a GitHub repository.
    - For a root site at `https://mahmoudahmed3132.github.io`, name it `mahmoudahmed3132.github.io`.
-   - For a project site, any repo name works, for example `portfolio`.
+   - This repo is currently configured for `PersonalBlog`, which publishes at `https://mahmoudahmed3132.github.io/PersonalBlog`.
+   - For a project site, any repo name works, but the base path must match the repo name.
 2. Push this project to that repository.
 3. In GitHub, open the repository settings.
 4. Go to **Settings → Pages**.
@@ -151,7 +152,7 @@ Recommended setup:
 For a project repo, the workflow automatically sets the correct base path, for example:
 
 ```text
-https://mahmoudahmed3132.github.io/portfolio
+https://mahmoudahmed3132.github.io/PersonalBlog
 ```
 
 For a custom domain or unusual repo setup, add repository variables:

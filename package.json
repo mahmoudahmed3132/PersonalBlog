@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:github": "NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL:-https://mahmoudahmed3132.github.io} next build",
+    "build:github": "NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL:-https://mahmoudahmed3132.github.io/PersonalBlog} NEXT_PUBLIC_BASE_PATH=${NEXT_PUBLIC_BASE_PATH:-/PersonalBlog} next build",
     "preview:static": "npx serve@latest out",
     "lint": "eslint",
     "import:medium": "node scripts/import-medium-posts.mjs",

@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowRight, BriefcaseBusiness, MessageCircle } from "lucide-react";
 import { Card, Section, TagList } from "@/components/ui";
+import { assetPath } from "@/lib/asset-path";
 import { formatDate, getAllBlogPosts } from "@/lib/blog";
 import { importedProjects } from "@/lib/generated-projects";
 import { resumeExperience } from "@/lib/resume-data";
@@ -17,12 +17,12 @@ export default function HomePage() {
   return (
     <>
       <section>
-        <Image
-          src="/avatar-pixel.png"
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={assetPath("/avatar-pixel.png")}
           alt="Animated pixel portrait of Mahmoud Halim"
           width={100}
           height={100}
-          priority
           className="size-24 rounded-full bg-[#93c5fd] object-cover dark:bg-[#fde68a]"
         />
 

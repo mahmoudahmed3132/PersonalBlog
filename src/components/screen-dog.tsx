@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef } from "react";
+import { assetPath } from "@/lib/asset-path";
 
 type Point = {
   x: number;
@@ -119,13 +119,13 @@ export function ScreenDog() {
   return (
     <div className="screen-pet-layer" aria-hidden="true">
       <div ref={runnerRef} className="screen-pet-runner">
-        <Image
-          src="/screen-dog.svg"
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={assetPath("/screen-dog.svg")}
           alt=""
-          width={64}
-          height={44}
+          width="64"
+          height="44"
           className="screen-pet"
-          priority
         />
       </div>
     </div>
