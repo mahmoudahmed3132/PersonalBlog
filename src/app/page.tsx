@@ -11,6 +11,7 @@ import {
   Mail,
   MapPin,
   MessageCircle,
+  Mic,
   Radar,
   ScanEye,
   ShieldCheck,
@@ -181,6 +182,37 @@ export default function HomePage() {
             </li>
           ))}
         </ol>
+      </Section>
+
+      <Section title="Speaking" eyebrow="On stage" action={{ label: "All speaking", href: "/speaking" }}>
+        <Card href="/speaking" className="overflow-hidden !p-0">
+          <div className="flex flex-col sm:flex-row">
+            <div className="sm:w-3/5">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={assetPath("/speaking/speaking-stage.jpg")}
+                alt="Mahmoud Halim speaking with a microphone in front of the audience at the UIC 2025 conference"
+                width={1600}
+                height={1066}
+                loading="lazy"
+                className="aspect-[3/2] h-full w-full object-cover"
+              />
+            </div>
+            <div className="flex flex-1 flex-col justify-center p-5 sm:w-2/5">
+              <p className="font-mono text-xs uppercase tracking-widest text-accent">UIC Conference 2025</p>
+              <h3 className="mt-2 font-medium leading-6">
+                Talking security operations with the community
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-muted">
+                On stage and in the hallway track — sharing detection engineering and incident
+                response lessons.
+              </p>
+              <p className="mt-3 inline-flex items-center gap-1.5 text-sm text-accent">
+                <Mic className="size-4" aria-hidden /> See the photos
+              </p>
+            </div>
+          </div>
+        </Card>
       </Section>
 
       <Section title="Certifications" eyebrow="Credentials" id="certifications">
