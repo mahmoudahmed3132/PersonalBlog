@@ -11,6 +11,7 @@ import {
   Laptop,
   Mail,
   MapPin,
+  Mic,
   Music,
   MonitorCog,
   PenLine,
@@ -62,6 +63,7 @@ export const siteConfig = {
   nav: [
     { label: "Home", href: "/", icon: Home },
     { label: "Work", href: "/work", icon: BriefcaseBusiness },
+    { label: "Speaking", href: "/speaking", icon: Mic },
     { label: "Projects", href: "/projects", icon: Code2 },
     { label: "Blog", href: "/blog", icon: BookOpen },
   ],
@@ -69,6 +71,7 @@ export const siteConfig = {
     { label: "Home", href: "/", icon: Home },
     { label: "Resume (print-friendly)", href: "/resume", icon: FileText },
     { label: "Work", href: "/work", icon: BriefcaseBusiness },
+    { label: "Speaking", href: "/speaking", icon: Mic },
     { label: "Projects", href: "/projects", icon: Code2 },
     { label: "Blog", href: "/blog", icon: BookOpen },
     { label: "Gears", href: "/gears", icon: Laptop },
