@@ -2,13 +2,17 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #151515;
-  --muted: #909092;
-  --muted-foreground: #909092;
-  --border: #e5e5e5;
+  --foreground: #131313;
+  --muted: #6b6b70;
+  --muted-foreground: #6b6b70;
+  --border: #e6e6e9;
   --surface: #ffffff;
   --card: #ffffff;
-  --subtle: #f7f7f7;
+  --subtle: #f6f6f7;
+  --accent: #0a7f5f;
+  --accent-strong: #086b50;
+  --accent-soft: rgba(10, 127, 95, 0.09);
+  --glow: rgba(10, 127, 95, 0.14);
 }
 
 @theme inline {
@@ -20,31 +24,55 @@
   --color-surface: var(--surface);
   --color-card: var(--card);
   --color-subtle: var(--subtle);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
   --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
 }
 
 .dark {
-  --background: #171717;
-  --foreground: #f5f5f5;
-  --muted: #909092;
-  --muted-foreground: #909092;
-  --border: rgba(255, 255, 255, 0.12);
-  --surface: #1f1f1f;
-  --card: #202020;
-  --subtle: #262626;
+  --background: #121214;
+  --foreground: #f2f2f2;
+  --muted: #9a9aa2;
+  --muted-foreground: #9a9aa2;
+  --border: rgba(255, 255, 255, 0.11);
+  --surface: #1a1a1d;
+  --card: #1d1d21;
+  --subtle: #232327;
+  --accent: #34d399;
+  --accent-strong: #6ee7b7;
+  --accent-soft: rgba(52, 211, 153, 0.1);
+  --glow: rgba(52, 211, 153, 0.12);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "cv11", "ss01";
 }
 
 .text-secondary {
   color: var(--muted-foreground);
 }
 
+.text-accent {
+  color: var(--accent);
+}
+
+/* ---------- Focus visibility (a11y) ---------- */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---------- Entry animations ---------- */
 @keyframes fade-in-blur {
   0% {
     opacity: 0.2;
@@ -56,10 +84,65 @@ body {
   }
 }
 
+@keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 var(--glow);
+  }
+  50% {
+    opacity: 0.75;
+    box-shadow: 0 0 0 5px transparent;
+  }
+}
+
 main {
   animation: fade-in-blur 0.5s ease-out both;
 }
 
+.animate-fade-up {
+  animation: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.12s; }
+.stagger-3 { animation-delay: 0.19s; }
+.stagger-4 { animation-delay: 0.26s; }
+.stagger-5 { animation-delay: 0.33s; }
+.stagger-6 { animation-delay: 0.4s; }
+
+/* ---------- Decorative background ---------- */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--foreground) 4%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--foreground) 4%, transparent) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, black 35%, transparent 78%);
+}
+
+.hero-glow::before {
+  content: "";
+  position: absolute;
+  inset: -30% 20% auto 20%;
+  height: 420px;
+  background: radial-gradient(closest-side, var(--glow), transparent);
+  filter: blur(48px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ---------- Buttons ---------- */
 .btn-inner-shadow {
   box-shadow:
     inset 0 1px 2px rgb(0 0 0 / 0.1),
@@ -70,6 +153,28 @@ main {
   box-shadow:
     inset 0 1px 2px rgb(255 255 255 / 0.05),
     inset 0 2px 4px rgb(255 255 255 / 0.03);
+}
+
+.btn-accent {
+  background: var(--foreground);
+  color: var(--background);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.btn-accent:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  border: 1px solid var(--border);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-outline:hover {
+  background: var(--subtle);
+  border-color: color-mix(in srgb, var(--foreground) 30%, transparent);
+  transform: translateY(-1px);
 }
 
 .skill-inner-shadow {
@@ -113,6 +218,7 @@ main {
   display: block;
 }
 
+/* ---------- Prose (blog posts) ---------- */
 .prose {
   color: var(--foreground);
 }
@@ -122,6 +228,7 @@ main {
   margin-bottom: 0.75rem;
   font-weight: 650;
   letter-spacing: -0.01em;
+  scroll-margin-top: 6rem;
 }
 
 .prose :where(p, ul, ol) {
@@ -135,9 +242,17 @@ main {
 }
 
 .prose :where(a) {
-  color: var(--foreground);
+  color: var(--accent-strong);
   text-decoration: underline;
   text-underline-offset: 4px;
+}
+
+.prose :where(blockquote) {
+  margin-top: 1.25rem;
+  border-left: 3px solid var(--accent);
+  padding-left: 1rem;
+  color: var(--muted);
+  font-style: italic;
 }
 
 .prose :where(code) {
@@ -165,6 +280,7 @@ main {
   color: inherit;
 }
 
+/* ---------- Screen pet ---------- */
 .screen-pet-layer {
   pointer-events: none;
   position: fixed;
@@ -207,7 +323,83 @@ main {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .screen-pet {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .screen-pet,
+  .animate-fade-up,
+  main {
     animation: none;
+  }
+
+  .typed-caret {
+    animation: none;
+  }
+}
+
+/* ---------- Typing caret ---------- */
+.typed-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: var(--accent);
+  animation: caret-blink 1s steps(2, start) infinite;
+}
+
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ---------- Print (resume) ---------- */
+@media print {
+  :root {
+    --background: #ffffff;
+    --foreground: #000000;
+    --muted: #444444;
+    --muted-foreground: #444444;
+    --border: #d4d4d4;
+    --surface: #ffffff;
+    --card: #ffffff;
+    --subtle: #f5f5f5;
+    --accent: #0a7f5f;
+    --accent-strong: #0a7f5f;
+    --accent-soft: #eef7f3;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  header,
+  footer,
+  .screen-pet-layer,
+  .no-print {
+    display: none !important;
+  }
+
+  main {
+    max-width: 100% !important;
+    padding: 0 !important;
+    animation: none !important;
+  }
+
+  .animate-fade-up {
+    animation: none !important;
+  }
+
+  a {
+    color: #000000 !important;
+    text-decoration: none !important;
+  }
+
+  section {
+    break-inside: avoid;
   }
 }
