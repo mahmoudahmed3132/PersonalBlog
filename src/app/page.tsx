@@ -191,7 +191,7 @@ export default function HomePage() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={assetPath("/speaking/speaking-stage.jpg")}
-                alt="Mahmoud Halim speaking with a microphone in front of the audience at the UIC 2025 conference"
+                alt="Mahmoud Halim presenting “See More, Stop More” with a microphone at the CrowdStrike Adversary Simulation event"
                 width={1600}
                 height={1066}
                 loading="lazy"
@@ -199,9 +199,9 @@ export default function HomePage() {
               />
             </div>
             <div className="flex flex-1 flex-col justify-center p-5 sm:w-2/5">
-              <p className="font-mono text-xs uppercase tracking-widest text-accent">UIC Conference 2025</p>
+              <p className="font-mono text-xs uppercase tracking-widest text-accent">CrowdStrike Adversary Simulation · July 2026</p>
               <h3 className="mt-2 font-medium leading-6">
-                Talking security operations with the community
+                “See More, Stop More”
               </h3>
               <p className="mt-2 text-sm leading-6 text-muted">
                 On stage and in the hallway track — sharing detection engineering and incident

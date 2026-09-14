@@ -26,22 +26,22 @@ export type SpeakingEvent = {
  */
 export const speakingEvents: SpeakingEvent[] = [
   {
-    event: "UIC Conference 2025",
-    date: "2025",
+    event: "CrowdStrike Adversary Simulation",
+    date: "11 July 2026",
     location: "",
-    talkTitle: "",
-    url: "",
+    talkTitle: "See More, Stop More",
+    url: "https://www.linkedin.com/feed/update/urn:li:activity:7486366734661124096/",
     description:
-      "Invited talk and discussions with attendees at the UIC 2025 conference.",
+      "Presented “See More, Stop More” at CrowdStrike’s Adversary Simulation event — on detection visibility and stopping more adversaries.",
     photos: [
       {
         src: "/speaking/speaking-stage.jpg",
-        alt: "Mahmoud Halim speaking with a microphone in front of the audience at the UIC 2025 conference",
-        caption: "On stage with the microphone — wide view of the venue.",
+        alt: "Mahmoud Halim presenting “See More, Stop More” with a microphone at the CrowdStrike Adversary Simulation event",
+        caption: "On stage — presenting “See More, Stop More”.",
       },
       {
         src: "/speaking/speaking-networking.jpg",
-        alt: "Mahmoud Halim discussing with fellow attendees between sessions at the UIC 2025 conference",
+        alt: "Mahmoud Halim discussing with fellow attendees between sessions at the CrowdStrike Adversary Simulation event",
         caption: "Between sessions — questions and discussions in the foyer.",
       },
     ],
