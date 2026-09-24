@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, JetBrains_Mono } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
-import { ConsoleBanner } from "@/components/console-banner";
 import { Footer, Header } from "@/components/layout";
 import { ScreenDog } from "@/components/screen-dog";
 import { siteConfig } from "@/lib/site-config";
@@ -13,9 +12,9 @@ const geist = Geist({
   display: "swap",
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const geistMono = Geist_Mono({
   subsets: ["latin"],
-  variable: "--font-jetbrains",
+  variable: "--font-geist-mono",
   display: "swap",
 });
 
@@ -113,7 +112,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geist.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${geist.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <Script id="theme-init" strategy="beforeInteractive">
@@ -132,11 +131,9 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <div className="page-backdrop" aria-hidden />
         <Header />
         <ScreenDog />
-        <ConsoleBanner />
-        <main id="main-content" className="mx-auto w-full max-w-3xl flex-1 px-4 py-14">
+        <main id="main-content" className="mx-auto w-full max-w-4xl flex-1 px-5 py-16 sm:px-8 sm:py-20">
           {children}
         </main>
         <Footer />

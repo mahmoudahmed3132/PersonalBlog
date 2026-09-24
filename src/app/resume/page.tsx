@@ -31,7 +31,7 @@ export default function ResumePage() {
       <header className="border-b border-border pb-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="font-mono text-xs uppercase tracking-widest text-accent">Résumé</p>
+            <p className="text-sm text-muted">Résumé</p>
             <h1 className="mt-1 text-3xl font-bold tracking-tight">{siteConfig.name}</h1>
             <p className="mt-2 text-lg font-medium text-secondary">{siteConfig.role}</p>
           </div>

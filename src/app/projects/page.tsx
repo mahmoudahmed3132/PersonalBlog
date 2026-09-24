@@ -69,14 +69,14 @@ export default function ProjectsPage() {
             <a
               key={project.name}
               href={project.href}
-              className={`group block rounded-xl border p-4 transition duration-300 hover:-translate-y-0.5 hover:border-foreground/25 ${
+              className={`group block rounded-lg border p-5 transition-colors hover:border-foreground/25 ${
                 featured
-                  ? "border-border bg-card shadow-sm hover:bg-subtle/70"
-                  : "border-border/70 bg-card/50 hover:bg-subtle/50"
+                  ? "border-border"
+                  : "border-border/70"
               }`}
             >
               <div className="flex items-start justify-between gap-3">
-                <h2 className="font-mono text-sm font-semibold">{project.name}</h2>
+                <h2 className="font-medium">{project.name}</h2>
                 <div className="flex shrink-0 items-center gap-2 text-muted">
                   {featured ? (
                     <Star className="size-3.5 fill-accent text-accent" aria-label="Featured project" />

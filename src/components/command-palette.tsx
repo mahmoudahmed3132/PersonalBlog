@@ -49,11 +49,10 @@ export function CommandPalette() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex h-9 items-center gap-2 rounded-md border border-border bg-surface px-2.5 text-sm text-muted transition hover:border-foreground/25 hover:text-foreground"
+        className="inline-flex size-9 items-center justify-center rounded-md text-muted transition-colors hover:text-foreground"
         aria-label="Open command palette"
       >
         <Search className="size-4" aria-hidden />
-        <kbd className="hidden rounded border border-border bg-subtle px-1.5 font-mono text-[11px] sm:inline">⌘K</kbd>
       </button>
       {open ? (
         <div className="fixed inset-0 z-50 bg-background/70 px-4 py-20 backdrop-blur-sm">
@@ -63,16 +62,16 @@ export function CommandPalette() {
             aria-label="Close command palette"
             onClick={() => setOpen(false)}
           />
-          <div className="relative mx-auto max-w-xl overflow-hidden rounded-lg border border-accent/30 bg-background shadow-2xl shadow-black/40">
+          <div className="relative mx-auto max-w-xl overflow-hidden rounded-lg border border-border bg-background shadow-2xl">
             <div className="flex items-center gap-2 border-b border-border px-3">
-              <span className="font-mono text-sm text-accent" aria-hidden>&gt;</span>
+              <Search className="size-4 text-muted" aria-hidden />
               <input
                 ref={inputRef}
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="cd /where-to…"
+                placeholder="Search pages…"
                 aria-label="Search pages"
-                className="h-12 flex-1 bg-transparent font-mono text-sm outline-none"
+                className="h-12 flex-1 bg-transparent text-sm outline-none"
               />
               <button
                 type="button"
