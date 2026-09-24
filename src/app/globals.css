@@ -181,8 +181,30 @@ main {
   line-height: 1.8;
 }
 
+.prose :where(h2) {
+  margin-top: 3rem;
+  font-size: 1.5rem;
+  line-height: 1.3;
+}
+
+.prose :where(h3) {
+  font-size: 1.2rem;
+}
+
 .prose :where(ul, ol) {
   padding-left: 1.25rem;
+}
+
+.prose :where(ul) {
+  list-style: disc;
+}
+
+.prose :where(ol) {
+  list-style: decimal;
+}
+
+.prose :where(li)::marker {
+  color: var(--muted);
 }
 
 .prose :where(a) {
@@ -217,6 +239,42 @@ main {
   font-family: var(--font-mono);
   font-size: 0.85rem;
   line-height: 1.7;
+}
+
+.prose :where(strong) {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.prose :where(li + li) {
+  margin-top: 0.4rem;
+}
+
+.prose :where(table) {
+  display: block;
+  width: 100%;
+  margin-top: 1.5rem;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.prose :where(th, td) {
+  border-bottom: 1px solid var(--border);
+  padding: 0.6rem 1.25rem 0.6rem 0;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.prose :where(th) {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.prose :where(td:first-child) {
+  white-space: normal;
+  min-width: 11rem;
 }
 
 .prose :where(pre code) {

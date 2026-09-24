@@ -104,7 +104,7 @@ export default function HomePage() {
       </Section>
 
       <Section title="Speaking" action={{ label: "All talks", href: "/speaking" }}>
-        <Link href="/speaking" className="group block">
+        <Link href={talk.postSlug ? `/blog/${talk.postSlug}` : "/speaking"} className="group block">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={assetPath(stagePhoto.src)}
@@ -121,7 +121,8 @@ export default function HomePage() {
             <p className="shrink-0 text-sm tabular-nums text-muted">{talk.date}</p>
           </div>
           <p className="mt-1.5 max-w-2xl text-sm leading-6 text-muted">
-            Detection visibility, and what it takes to stop more adversaries.
+            Why a vendor POC can&apos;t tell you whether a product will stop a breach, and how to test it through
+            adversary eyes instead.{talk.postSlug ? <span className="text-foreground"> Read the write-up →</span> : null}
           </p>
         </Link>
       </Section>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { CalendarDays, MapPin, Mic } from "lucide-react";
 import { PageHeader } from "@/components/ui";
 import { speakingEvents } from "@/lib/speaking-data";
@@ -68,14 +69,18 @@ export default function SpeakingPage() {
               ))}
             </div>
 
-            {item.url ? (
-              <a
-                href={item.url}
-                className="link mt-6 inline-block text-sm font-medium"
-              >
-                Event post →
-              </a>
-            ) : null}
+            <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm font-medium">
+              {item.postSlug ? (
+                <Link href={`/blog/${item.postSlug}`} className="link">
+                  Read the write-up →
+                </Link>
+              ) : null}
+              {item.url ? (
+                <a href={item.url} className="link">
+                  Event post ↗
+                </a>
+              ) : null}
+            </div>
           </section>
         ))}
       </div>

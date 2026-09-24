@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { CodeBlock } from "@/components/code-block";
+import { assetPath } from "@/lib/asset-path";
 import { TagList } from "@/components/ui";
 import { formatDate, getAllBlogPosts, getBlogPost, getBlogSlugs } from "@/lib/blog";
 import { siteConfig } from "@/lib/site-config";
@@ -103,7 +104,7 @@ export default async function BlogPostPage({ params }: Props) {
       </header>
 
       <div className="prose mt-8">
-        <MDXRemote source={post.content} components={{ pre: CodeBlock }} />
+        <MDXRemote source={post.content} components={{ pre: CodeBlock, img: PostImage }} />
       </div>
 
       {(newer || older) && (
@@ -142,6 +143,18 @@ export default async function BlogPostPage({ params }: Props) {
         </nav>
       )}
     </article>
+  );
+}
+
+/** Local images need the GitHub Pages base path; alt text doubles as the caption. */
+function PostImage({ src, alt }: React.ComponentPropsWithoutRef<"img">) {
+  const resolved = typeof src === "string" && src.startsWith("/") ? assetPath(src) : src;
+  return (
+    <span className="my-8 block">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={resolved} alt={alt ?? ""} loading="lazy" className="photo w-full rounded-xl" />
+      {alt ? <span className="mt-2.5 block text-center text-xs text-muted">{alt}</span> : null}
+    </span>
   );
 }
 

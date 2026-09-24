@@ -1,0 +1,209 @@
+---
+title: "See More, Stop More: testing security vendors through adversary eyes"
+description: "The write-up of my CrowdStrike Adversary Simulation talk. Why a vendor POC can't tell you whether a product will stop a breach, and the adversary-emulation method I use instead: one rig, three dispositions, weights and gates."
+publishedAt: "2026-09-24"
+tags:
+  - "Adversary Emulation"
+  - "Detection Engineering"
+  - "EDR"
+  - "Security Buying"
+draft: false
+---
+
+![Presenting “See More, Stop More” at the CrowdStrike Adversary Simulation event](/speaking/speaking-stage.jpg)
+
+In July I spoke at CrowdStrike's Adversary Simulation event. The talk made a single argument: **when you buy a security product, make it prove itself on your own environment, through an adversary's eyes.** This post is the long-form version.
+
+## The bet you're making
+
+When you buy security, you're buying a promise. The vendor's slide says it blocks "100% of known and unknown threats." The average breach costs **$4.44M** (IBM, Cost of a Data Breach 2025) if that promise turns out to be wrong. And the risk, the downtime and the customer notification are yours.
+
+The vendor gets paid whether or not the product stops the breach. That asymmetry is why the burden of proof belongs on your side of the table.
+
+## The old proof is obsolete
+
+Vendor demos were built for an adversary that dropped a file and waited for it to be scanned. That adversary is mostly gone:
+
+- **29 minutes** average eCrime breakout time. The fastest recorded was 27 seconds (CrowdStrike 2026 Global Threat Report).
+- **82%** of detections are malware-free. There's no file to scan.
+- **84%** of severe breaches used living-off-the-land tradecraft, and **71%** abused PowerShell, which is already trusted on your hosts (Bitdefender LOTL telemetry, 2025).
+
+Modern intrusions abuse the tools you already trust. A canned demo never shows you that.
+
+## Offense runs in minutes, response takes weeks
+
+Put the numbers side by side. Breakout takes **29 minutes**. Median dwell time is **14 days** (Mandiant M-Trends 2026). Identifying and containing a breach takes **241 days** on average (IBM 2025).
+
+Detection alone can't close that gap. An alert that lands in a queue is working on your SOC's clock, not the attacker's. Only prevention that acts on its own operates on the adversary's clock.
+
+That's also the business case. Speed of containment is the biggest cost lever you control: organizations with automation and autonomous response saved **$1.9M** per breach and identified and contained it **80 days** faster. So the question to ask a vendor isn't "does it alert?" It's "**does it act, on its own, before the objective completes?**"
+
+## Why the datasheet can't answer that
+
+- **100%** is a lab number: known samples, default tuning, no evasion.
+- **Alert ≠ block.** Detection gets quietly counted as protection.
+- **It's not you.** Their lab isn't your estate. Your legacy apps, your exclusions and your blind spots never show up in it.
+
+The only question that matters is: _will it stop this, here, on my environment?_
+
+## See more vs. stop more
+
+These are two different values, and most evaluations blur them together.
+
+**See More (detection).** An alert is raised, but nothing is blocked. The objective completes anyway, and containment depends on how fast your SOC is. You're buying forensics.
+
+**Stop More (prevention).** The action is enforced: the process is killed, the request blocked, access denied. The objective fails, and it's contained regardless of response time. You're buying outcomes on the adversary's clock.
+
+A product can win every detection metric and still lose every breach. Score both, separately.
+
+## The POC problem
+
+Most proofs of concept can't answer the question either. They're usually:
+
+- **Steered.** The vendor runs it, picks the scenarios and avoids its weak spots.
+- **Narrow.** It tests the console, the integrations and the agent's footprint, not whether the product stops a breach.
+- **Scripted.** Known samples with no evasion and no LOTL. It's closer to a guided demo.
+- **Unscored.** There's no verdict per technique, so you can't compare vendors fairly.
+
+A POV the vendor runs is built to prove value, not to expose failure.
+
+## Adversary emulation: not a scan, not a pen test
+
+- A **vulnerability scan** answers "what weaknesses exist?" You get a list of CVEs. It says nothing about whether your control would catch the exploitation.
+- A **penetration test** answers "can a skilled human get in?" It's one path, run once, and depends on the tester. You can't compare vendors with it.
+- **Adversary emulation** runs the same catalogue of techniques identically against every product and scores each technique. Because it's repeatable, it's comparable. Because it's comparable, it's a buying tool.
+
+## The method: same rig, every vendor
+
+The only variable should be the product.
+
+1. **Build the range from your gold image.** Your OS, apps and policies, cloned once per vendor.
+2. **Map real TTPs to ATT&CK.** From recon to impact, including evasion.
+3. **Isolate each phase** so every verdict is clean and attributable to one technique.
+4. **Record each disposition with evidence:** command lines, artifacts, timestamps.
+5. **Re-test after tuning** to prove the difference.
+
+My reference run covered **12 techniques** across **8 ATT&CK tactics** and produced **426 sensor events**. It's small enough to run per vendor and wide enough to cover the kill chain.
+
+## Three buckets
+
+Every technique ends up in exactly one bucket:
+
+- **Prevented (best).** Enforced, the objective fails, and no human was needed.
+- **Detected (conditional).** Alerted but not blocked. Containment depends on response time.
+- **Silent (worst).** No alert and no artifact. It's invisible to detection _and_ to forensics.
+
+**Silent is worse than Detected.** A detection leaves a trail you can investigate. Silent leaves nothing.
+
+## Strong at the noise, blind at the prep
+
+When you map dispositions onto the kill chain, a pattern shows up again and again:
+
+<table>
+  <thead>
+    <tr><th>Stage</th><th>Disposition</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Recon / discovery</td><td>Silent</td></tr>
+    <tr><td>Execution</td><td>Prevented</td></tr>
+    <tr><td>Persistence</td><td>Mixed</td></tr>
+    <tr><td>Privilege escalation</td><td>Prevented</td></tr>
+    <tr><td>Defense evasion</td><td>Prevented</td></tr>
+    <tr><td>Credential access</td><td>Partial</td></tr>
+    <tr><td>Collection</td><td>Silent</td></tr>
+    <tr><td>Command and control</td><td>Silent</td></tr>
+    <tr><td>Impact</td><td>Prevented</td></tr>
+  </tbody>
+</table>
+
+Prevention clusters on the loud stages, execution and impact. The silent gaps sit in the quiet prep: exactly the stages that the 84% of severe breaches using LOTL tradecraft rely on.
+
+## Trap 1: the prevention illusion
+
+In one run, a single PowerShell phase produced **32 alerts**. It looked bulletproof. The five pre-impact techniques around it (recon, privilege escalation, credential access, collection and C2) produced **0 events**.
+
+Alert volume isn't coverage. **Score by position in the kill chain, not by alert count.** One silent recon gap outranks a hundred execution alerts.
+
+## Trap 2: partial prevention is failure
+
+**14 of 28** LSASS dump attempts were blocked. The other 14 completed, including all 12 critical events.
+
+Credential access is binary. One hash dump owns the domain, and stolen credentials show up in **32%** of breaches and **22%** of initial access (Verizon DBIR 2025). Fifty percent blocked means breached. Make binary objectives like this a **gate**, not a score.
+
+## Three postures
+
+A real test usually shows one of three postures. These are anonymized archetypes, not brands, and the numbers below are illustrative, not an endorsement:
+
+- **The Blocker (Vendor X).** Prevention-led with aggressive blocking. Thinner visibility, and harder to tune.
+- **The Watcher (Vendor Y).** Deep telemetry and detection, but lighter on autonomous enforcement.
+- **Balanced (Vendor Z).** Moderate on both, and strongest against novel tradecraft.
+
+<table>
+  <thead>
+    <tr><th>Metric</th><th>Vendor X</th><th>Vendor Y</th><th>Vendor Z</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Prevention coverage</td><td>67%</td><td>50%</td><td>58%</td></tr>
+    <tr><td>Detection coverage</td><td>75%</td><td>92%</td><td>83%</td></tr>
+    <tr><td>Silent gaps (of 12)</td><td>3</td><td>1</td><td>2</td></tr>
+    <tr><td>Novel-tradecraft block</td><td>41%</td><td>58%</td><td>67%</td></tr>
+    <tr><td>False positives / week</td><td>2.1</td><td>6.4</td><td>3.0</td></tr>
+  </tbody>
+</table>
+
+No vendor wins every row. The question is which profile minimizes _your_ residual risk.
+
+## Buy area, not a spike
+
+Plot each vendor on four axes: prevention, detection, novel tradecraft and false-positive control. X spikes on prevention (85) but collapses on novel tradecraft (41). Y spikes on detection (95) but collapses on FP control (40). Z has no collapsed axis: 72, 83, 82 and 74. It covers the most area.
+
+A tall spike with a collapsed axis is a single point of failure. Buy area.
+
+## The best tester isn't the best buy
+
+Add cost and operational load and the ranking shifts again. The top performer often sits in "premium": the best efficacy, with diminishing returns for the money. The best buy is usually the product with near-leader efficacy at the lowest cost and load. And the one that looks cheapest on the quote is often the most expensive to run.
+
+## Weights rank options, gates eliminate
+
+<table>
+  <thead>
+    <tr><th>Criterion</th><th>Weight</th><th>Why</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Deep-chain prevention</td><td>×3</td><td>Stops breaches from completing</td></tr>
+    <tr><td>Kill-chain breadth</td><td>×3</td><td>Coverage where breaches begin</td></tr>
+    <tr><td>Silent-gap penalty</td><td>×3</td><td>Invisible outranks un-blocked</td></tr>
+    <tr><td>Novel-tradecraft confidence</td><td>×2</td><td>Against the unknown</td></tr>
+    <tr><td>Detection &amp; fidelity</td><td>×2</td><td>Signal-to-noise</td></tr>
+    <tr><td>Credential &amp; impact integrity</td><td>Gate</td><td>Failure ends the conversation</td></tr>
+  </tbody>
+</table>
+
+Set the weights to your own risk appetite. Don't make the gates negotiable.
+
+## Your playbook
+
+Six steps before you sign:
+
+1. **Threat-model your business.** Pick the adversaries and TTPs that target your sector.
+2. **Build a range from your gold image,** cloned per vendor.
+3. **Emulate the full chain,** including the LOTL tradecraft that demos skip.
+4. **Classify every technique** as Prevented, Detected or Silent, with evidence.
+5. **Score with weights and gates.** Rank on your risk, and eliminate anything that fails a gate.
+6. **Make vendors close the gaps, then re-test.** That turns the POC into a recurring control.
+
+The tooling is all open: MITRE ATT&CK, Atomic Red Team, Caldera, Sysmon and your SIEM.
+
+## Five things to remember
+
+1. **Test on your turf.** Emulation on your estate measures reality.
+2. **Seeing isn't stopping.** Score detection and prevention separately.
+3. **Weight the chain, gate the binaries.** Credential integrity is pass or fail.
+4. **Demand the denominator.** "Coverage percent, out of what?"
+5. **Tools are necessary, not sufficient.** The answer is a program: the right product, tuned with your engineering, and re-tested every renewal.
+
+Don't buy security blind. The right control is the one whose measured, tuned coverage survives a real adversary on your estate.
+
+![Discussing the talk with attendees between sessions](/speaking/speaking-networking.jpg)
+
+_Thanks to everyone who stayed for the hallway questions. If you're running a vendor evaluation and want to compare notes on the method, [email me](mailto:mahmoudhalim466@gmail.com)._
