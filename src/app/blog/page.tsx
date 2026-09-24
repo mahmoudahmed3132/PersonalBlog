@@ -1,43 +1,63 @@
 import type { Metadata } from "next";
-import { ArrowUpRight } from "lucide-react";
-import { PageHeader } from "@/components/ui";
-import { BlogExplorer } from "@/components/blog-explorer";
-import { getAllBlogPosts } from "@/lib/blog";
+import { PageHeader, Row } from "@/components/ui";
+import { formatDate, getAllBlogPosts, postHref } from "@/lib/blog";
 import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Blog",
   description:
-    "Technical notes on detection engineering, DFIR, cloud security, and security labs — mirrored from Mahmoud Halim's Medium.",
+    "Technical notes on detection engineering, DFIR, cloud security, and security labs by Mahmoud Halim.",
 };
 
 export default function BlogPage() {
-  const posts = getAllBlogPosts().map((post) => ({
-    slug: post.slug,
-    title: post.title,
-    description: post.description,
-    publishedAt: post.publishedAt,
-    readingTime: post.readingTime,
-    tags: post.tags,
-    source: post.source,
-  }));
+  const posts = getAllBlogPosts();
+  const years = new Map<string, typeof posts>();
+  for (const post of posts) {
+    const year = post.publishedAt.slice(0, 4);
+    years.set(year, [...(years.get(year) ?? []), post]);
+  }
 
   return (
     <>
       <PageHeader
         title="Blog"
-        eyebrow="Writing"
-        description="Detection engineering, DFIR walkthroughs, and security lab notes. Full posts live on Medium; these are mirrored summaries with the key takeaways."
+        description="Detection engineering, DFIR walkthroughs, and notes from the lab. Posts marked ↗ live on Medium."
       >
-        <a
-          href={siteConfig.medium}
-          className="btn-outline mb-8 mt-6 inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm"
-        >
-          Read original posts on Medium
-          <ArrowUpRight className="size-3.5" aria-hidden />
-        </a>
+        <p className="mt-5 text-sm text-muted">
+          Subscribe via{" "}
+          <a href={`${siteConfig.url}/rss.xml`} className="link text-foreground">
+            RSS
+          </a>{" "}
+          or follow on{" "}
+          <a href={siteConfig.medium} className="link text-foreground">
+            Medium
+          </a>
+          .
+        </p>
       </PageHeader>
-      <BlogExplorer posts={posts} />
+
+      <div className="space-y-14">
+        {[...years.entries()].map(([year, items]) => (
+          <section key={year} aria-label={`Posts from ${year}`}>
+            <h2 className="border-b border-border pb-3 text-sm tabular-nums text-muted">{year}</h2>
+            <ul>
+              {items.map((post) => (
+                <Row
+                  key={post.slug}
+                  href={postHref(post)}
+                  title={
+                    <>
+                      {post.title}
+                      {post.externalUrl ? <span className="font-normal text-muted"> ↗</span> : null}
+                    </>
+                  }
+                  meta={formatDate(post.publishedAt).replace(/,?\s*\d{4}$/, "")}
+                />
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
     </>
   );
 }

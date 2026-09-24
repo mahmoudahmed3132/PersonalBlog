@@ -127,9 +127,18 @@ export default function ResumePage() {
         <h2 className="text-xl font-bold tracking-tight">Certifications</h2>
         <ul className="mt-5 grid gap-2 text-sm sm:grid-cols-2">
           {certifications.map((cert) => (
-            <li key={cert} className="flex items-start gap-2">
+            <li key={cert.name} className="flex items-start gap-2">
               <BadgeCheck className="mt-0.5 size-4 shrink-0 text-accent" aria-hidden />
-              <span className="leading-6 text-muted">{cert}</span>
+              <span className="leading-6 text-muted">
+                {cert.url ? (
+                  <a href={cert.url} className="link text-foreground">
+                    {cert.name}
+                  </a>
+                ) : (
+                  cert.name
+                )}
+                {cert.issuer ? <> · {cert.issuer}</> : null}
+              </span>
             </li>
           ))}
         </ul>

@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CommandPalette } from "@/components/command-palette";
+import { OPEN_CONSOLE_EVENT } from "@/components/console";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { assetPath } from "@/lib/asset-path";
 import { siteConfig } from "@/lib/site-config";
 
 export function Header() {
@@ -60,23 +62,50 @@ export function Header() {
 
 export function Footer() {
   const year = new Date().getFullYear();
+  const sha = process.env.BUILD_SHA;
+  const built = (process.env.BUILD_TIME ?? "").slice(0, 10);
 
   return (
     <footer className="mt-16">
-      <div className="mx-auto flex w-full max-w-4xl flex-col gap-4 border-t border-border px-5 py-10 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-8">
-        <p>
-          © {year} {siteConfig.name} · {siteConfig.location}
-        </p>
-        <nav className="flex flex-wrap gap-x-5 gap-y-2" aria-label="Footer">
-          {siteConfig.footer.map((item) => (
-            <Link key={item.href} href={item.href} className="transition-colors hover:text-foreground">
-              {item.label}
+      <div className="mx-auto w-full max-w-4xl border-t border-border px-5 py-10 text-sm text-muted sm:px-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            © {year} {siteConfig.name} · {siteConfig.location}
+          </p>
+          <nav className="flex flex-wrap gap-x-5 gap-y-2" aria-label="Footer">
+            {siteConfig.footer.map((item) => (
+              // Plain anchors: these are feeds/external URLs, not routes, so Link prefetching would 404.
+              <a
+                key={item.href}
+                href={item.href.startsWith("/") ? assetPath(item.href) : item.href}
+                className="transition-colors hover:text-foreground"
+              >
+                {item.label}
+              </a>
+            ))}
+            <Link href="/resume" className="transition-colors hover:text-foreground">
+              Résumé
             </Link>
-          ))}
-          <Link href="/resume" className="transition-colors hover:text-foreground">
-            Résumé
-          </Link>
-        </nav>
+          </nav>
+        </div>
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 font-mono text-xs">
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new Event(OPEN_CONSOLE_EVENT))}
+            className="transition-colors hover:text-foreground"
+          >
+            &gt;_ press <kbd className="rounded border border-border px-1">~</kbd> for a console
+          </button>
+          {sha ? (
+            <a
+              href={`https://github.com/mahmoudahmed3132/PersonalBlog/commit/${sha}`}
+              className="transition-colors hover:text-foreground"
+              title="The commit this page was built from"
+            >
+              build {sha} · {built}
+            </a>
+          ) : null}
+        </div>
       </div>
     </footer>
   );

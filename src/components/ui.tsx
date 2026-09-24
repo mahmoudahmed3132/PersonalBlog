@@ -123,3 +123,30 @@ export function Row({
     </li>
   );
 }
+
+export function CertificationList({
+  items,
+}: {
+  items: readonly { name: string; issuer?: string; url: string }[];
+}) {
+  return (
+    <ul className="grid gap-x-10 text-sm sm:grid-cols-2">
+      {items.map((cert) => (
+        <li key={cert.name} className="border-b border-border py-3 leading-6">
+          {cert.url ? (
+            <a href={cert.url} className="link text-foreground">
+              {cert.name}
+              <span className="text-muted" aria-hidden>
+                {" "}
+                ↗
+              </span>
+            </a>
+          ) : (
+            <span className="text-foreground">{cert.name}</span>
+          )}
+          {cert.issuer ? <span className="block text-xs text-muted">{cert.issuer}</span> : null}
+        </li>
+      ))}
+    </ul>
+  );
+}

@@ -137,6 +137,24 @@ main {
   display: block;
 }
 
+/* ---------- Console ---------- */
+@keyframes console-in {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.console-panel {
+  animation: console-in 0.16s ease-out both;
+}
+
+.console-panel input:focus-visible {
+  outline: none;
+}
+
 /* ---------- Photos ---------- */
 .photo {
   background: var(--subtle);
@@ -207,55 +225,13 @@ main {
   color: inherit;
 }
 
-/* ---------- Screen pet ---------- */
-.screen-pet-layer {
-  pointer-events: none;
-  position: fixed;
-  inset: 0;
-  z-index: 30;
-  overflow: hidden;
-}
-
-.screen-pet-runner {
-  position: absolute;
-  left: 0;
-  top: 0;
-  transform-origin: center bottom;
-  will-change: transform;
-}
-
-.screen-pet {
-  display: block;
-  width: 42px;
-  height: auto;
-  image-rendering: pixelated;
-  filter: drop-shadow(0 1px 0 rgb(0 0 0 / 0.12));
-  animation: screen-pet-step 0.48s steps(2, end) infinite;
-}
-
-.screen-pet-runner[data-state="run"] .screen-pet {
-  animation-duration: 0.32s;
-}
-
-@keyframes screen-pet-step {
-  50% {
-    transform: translateY(-2px);
-  }
-}
-
-@media (max-width: 640px) {
-  .screen-pet {
-    width: 34px;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
 
-  .screen-pet,
-  main {
+  main,
+  .console-panel {
     animation: none;
   }
 }
@@ -284,7 +260,6 @@ main {
 
   header,
   footer,
-  .screen-pet-layer,
   .no-print {
     display: none !important;
   }

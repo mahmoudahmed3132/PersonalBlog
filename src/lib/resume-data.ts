@@ -99,15 +99,25 @@ export const expertise = [
   },
 ];
 
-export const certifications = [
-  "Certified CrowdStrike NG-SIEM Engineer (Expert)",
-  "Certified CrowdStrike Falcon Administrator (Expert)",
-  "Fortinet FortiSIEM 6.3 Administrator",
-  "Certified Windows Forensics Engineer",
-  "Certified Network Security Practitioner",
-  "Certified Ethical Hacker",
-  "CCNA: Enterprise Networking, Security, and Automation",
-  "AWS",
+export type Certification = {
+  name: string;
+  issuer?: string;
+  /** Verification / badge URL (e.g. the Credly badge page). Leave "" until you have it. */
+  url: string;
+};
+
+/** Credly (or other) profile listing every badge. Shown as "Verify on Credly" when set. */
+export const credentialsProfileUrl = "";
+
+export const certifications: Certification[] = [
+  { name: "Certified CrowdStrike NG-SIEM Engineer (Expert)", issuer: "CrowdStrike", url: "" },
+  { name: "Certified CrowdStrike Falcon Administrator (Expert)", issuer: "CrowdStrike", url: "" },
+  { name: "Fortinet FortiSIEM 6.3 Administrator", issuer: "Fortinet", url: "" },
+  { name: "Certified Windows Forensics Engineer", url: "" },
+  { name: "Certified Network Security Practitioner", url: "" },
+  { name: "Certified Ethical Hacker", issuer: "EC-Council", url: "" },
+  { name: "CCNA: Enterprise Networking, Security, and Automation", issuer: "Cisco", url: "" },
+  { name: "AWS", issuer: "Amazon Web Services", url: "" },
 ];
 
 export const education = {

@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { Row, Section } from "@/components/ui";
+import { CertificationList, Row, Section } from "@/components/ui";
 import { assetPath } from "@/lib/asset-path";
-import { formatDate, getAllBlogPosts } from "@/lib/blog";
+import { formatDate, getAllBlogPosts, postHref } from "@/lib/blog";
 import { importedProjects } from "@/lib/generated-projects";
-import { certifications, resumeExperience } from "@/lib/resume-data";
+import { certifications, credentialsProfileUrl, resumeExperience } from "@/lib/resume-data";
 import { developmentLinks, personalLinks, siteConfig } from "@/lib/site-config";
 import { speakingEvents } from "@/lib/speaking-data";
 
@@ -85,6 +85,24 @@ export default function HomePage() {
         </figure>
       </section>
 
+      <Section title="Writing" action={{ label: "All posts", href: "/blog" }}>
+        <ul>
+          {posts.map((post) => (
+            <Row
+              key={post.slug}
+              href={postHref(post)}
+              title={
+                <>
+                  {post.title}
+                  {post.externalUrl ? <span className="font-normal text-muted"> ↗</span> : null}
+                </>
+              }
+              meta={formatDate(post.publishedAt)}
+            />
+          ))}
+        </ul>
+      </Section>
+
       <Section title="Speaking" action={{ label: "All talks", href: "/speaking" }}>
         <Link href="/speaking" className="group block">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -108,13 +126,6 @@ export default function HomePage() {
         </Link>
       </Section>
 
-      <Section title="Writing" action={{ label: "All posts", href: "/blog" }}>
-        <ul>
-          {posts.map((post) => (
-            <Row key={post.slug} href={`/blog/${post.slug}`} title={post.title} meta={formatDate(post.publishedAt)} />
-          ))}
-        </ul>
-      </Section>
 
       <Section title="Experience" action={{ label: "Full history", href: "/work" }}>
         <ul>
@@ -146,12 +157,12 @@ export default function HomePage() {
         </ul>
       </Section>
 
-      <Section title="Certifications" id="certifications">
-        <ul className="grid gap-x-10 gap-y-3 text-sm text-secondary sm:grid-cols-2">
-          {certifications.map((cert) => (
-            <li key={cert}>{cert}</li>
-          ))}
-        </ul>
+      <Section
+        title="Certifications"
+        id="certifications"
+        action={credentialsProfileUrl ? { label: "Verify on Credly", href: credentialsProfileUrl } : undefined}
+      >
+        <CertificationList items={certifications} />
       </Section>
 
       <Section title="Get in touch">
