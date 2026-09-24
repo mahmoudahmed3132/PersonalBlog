@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { TagList } from "@/components/ui";
 
@@ -52,8 +52,8 @@ export function BlogExplorer({ posts }: { posts: BlogPostMeta[] }) {
 
   return (
     <div>
-      <div className="mb-5 flex flex-col gap-3">
-        <label className="flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2.5 text-sm transition focus-within:border-foreground/30">
+      <div className="mb-8 flex flex-col gap-4">
+        <label className="flex items-center gap-2 rounded-lg border border-border px-3 py-2.5 text-sm transition focus-within:border-foreground/40">
           <Search className="size-4 shrink-0 text-muted" aria-hidden />
           <span className="sr-only">Search posts</span>
           <input
@@ -96,19 +96,18 @@ export function BlogExplorer({ posts }: { posts: BlogPostMeta[] }) {
       </div>
 
       {filtered.length ? (
-        <div className="space-y-3" aria-live="polite">
+        <div className="border-t border-border" aria-live="polite">
           {filtered.map((post) => (
             <Link
               key={post.slug}
               href={`/blog/${post.slug}`}
-              className="block rounded-xl border border-border bg-card/70 p-4 transition duration-300 hover:-translate-y-0.5 hover:border-foreground/25 hover:bg-subtle/70"
+              className="group block border-b border-border py-6"
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <h2 className="font-medium">{post.title}</h2>
+                  <h2 className="text-lg font-medium decoration-foreground/30 underline-offset-4 group-hover:underline">{post.title}</h2>
                   <p className="mt-2 text-sm leading-6 text-muted">{post.description}</p>
                 </div>
-                <ArrowRight className="mt-1 size-4 shrink-0 text-muted" aria-hidden />
               </div>
               <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <TagList tags={post.tags} />

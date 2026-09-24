@@ -2,55 +2,48 @@ import Link from "next/link";
 
 export function Section({
   title,
-  eyebrow = "Featured",
   children,
   action,
   id,
 }: {
   title: string;
+  /** Kept for call-site compatibility; the minimal design shows only the title. */
   eyebrow?: string;
   children: React.ReactNode;
   action?: { label: string; href: string };
   id?: string;
 }) {
   return (
-    <section className="mt-20 scroll-mt-24" id={id}>
-      <div>
-        <p className="font-mono text-xs uppercase tracking-widest text-accent">{eyebrow}</p>
-        <h2 className="mt-1 text-2xl font-bold tracking-tight">{title}</h2>
-      </div>
-      <div className="mt-7">{children}</div>
-      {action ? (
-        <div className="mt-8 flex justify-center">
-          <Link
-            href={action.href}
-            className="btn-outline rounded-md px-4 py-2 text-sm"
-          >
-            {action.label}
+    <section className="mt-24 scroll-mt-24" id={id}>
+      <div className="flex items-baseline justify-between gap-4 border-b border-border pb-3">
+        <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
+        {action ? (
+          <Link href={action.href} className="shrink-0 text-sm text-muted transition hover:text-foreground">
+            {action.label} →
           </Link>
-        </div>
-      ) : null}
+        ) : null}
+      </div>
+      <div className="mt-6">{children}</div>
     </section>
   );
 }
 
 export function PageHeader({
   title,
-  eyebrow = "Index",
   description,
   children,
 }: {
   title: string;
+  /** Kept for call-site compatibility; not rendered. */
   eyebrow?: string;
   description?: string;
   children?: React.ReactNode;
 }) {
   return (
-    <div className="mb-10">
-      <p className="font-mono text-xs uppercase tracking-widest text-accent">{eyebrow}</p>
-      <h1 className="mt-1 text-3xl font-bold tracking-tight">{title}</h1>
+    <div className="mb-14">
+      <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">{title}</h1>
       {description ? (
-        <p className="mt-4 max-w-2xl text-pretty leading-7 text-secondary">{description}</p>
+        <p className="mt-5 max-w-2xl text-pretty text-lg leading-8 text-secondary">{description}</p>
       ) : null}
       {children}
     </div>
@@ -67,7 +60,7 @@ export function Card({
   className?: string;
 }) {
   const base =
-    "block rounded-xl border border-border bg-card/70 p-4 transition duration-300 hover:-translate-y-0.5 hover:border-foreground/25 hover:bg-subtle/70";
+    "block rounded-lg border border-border p-5 transition-colors duration-200 hover:border-foreground/25";
   const resolved = `${base} ${className}`.trim();
 
   if (href) {
@@ -83,36 +76,50 @@ export function Card({
 
 export function TagList({ tags }: { tags: readonly string[] }) {
   return (
-    <div className="flex flex-wrap gap-2">
+    <ul className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted">
       {tags.map((tag) => (
-        <span
-          key={tag}
-          className="tag-inner-shadow rounded-md border border-dashed border-foreground/20 bg-foreground/5 px-2.5 py-1 text-xs text-secondary dark:border-white/25 dark:bg-white/10"
-        >
-          {tag}
-        </span>
+        <li key={tag}>#{tag.toLowerCase().replace(/\s+/g, "-")}</li>
       ))}
-    </div>
+    </ul>
   );
 }
 
-export function StatBand({
-  stats,
+/** A plain list row: title on the left, meta on the right, hairline between rows. */
+export function Row({
+  href,
+  title,
+  meta,
+  description,
 }: {
-  stats: { label: string; value: string; hint?: string }[];
+  href: string;
+  title: React.ReactNode;
+  meta?: React.ReactNode;
+  description?: React.ReactNode;
 }) {
+  const external = href.startsWith("http");
+  const content = (
+    <>
+      <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+        <span className="font-medium decoration-foreground/30 underline-offset-4 group-hover:underline">
+          {title}
+        </span>
+        {meta ? <span className="shrink-0 text-sm tabular-nums text-muted">{meta}</span> : null}
+      </div>
+      {description ? <p className="mt-1.5 text-sm leading-6 text-muted">{description}</p> : null}
+    </>
+  );
+
   return (
-    <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-      {stats.map((stat) => (
-        <div
-          key={stat.label}
-          className="skill-inner-shadow rounded-xl border border-border bg-card/70 px-4 py-3"
-        >
-          <dd className="text-xl font-bold tracking-tight">{stat.value}</dd>
-          <dt className="mt-0.5 text-xs font-medium text-muted">{stat.label}</dt>
-          {stat.hint ? <p className="mt-1 text-[11px] leading-4 text-muted">{stat.hint}</p> : null}
-        </div>
-      ))}
-    </dl>
+    <li className="border-b border-border last:border-b-0">
+      {external ? (
+        <a href={href} className="group block py-4">
+          {content}
+        </a>
+      ) : (
+        <Link href={href} className="group block py-4">
+          {content}
+        </Link>
+      )}
+    </li>
   );
 }

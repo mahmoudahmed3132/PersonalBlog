@@ -49,11 +49,10 @@ export function CommandPalette() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex h-9 items-center gap-2 rounded-md border border-border bg-surface px-2.5 text-sm text-muted transition hover:border-foreground/25 hover:text-foreground"
+        className="inline-flex size-9 items-center justify-center rounded-md text-muted transition-colors hover:text-foreground"
         aria-label="Open command palette"
       >
         <Search className="size-4" aria-hidden />
-        <span className="hidden sm:inline">Ctrl K</span>
       </button>
       {open ? (
         <div className="fixed inset-0 z-50 bg-background/70 px-4 py-20 backdrop-blur-sm">
@@ -70,7 +69,8 @@ export function CommandPalette() {
                 ref={inputRef}
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search pages..."
+                placeholder="Search pages…"
+                aria-label="Search pages"
                 className="h-12 flex-1 bg-transparent text-sm outline-none"
               />
               <button

@@ -68,7 +68,7 @@ export default async function BlogPostPage({ params }: Props) {
   };
 
   return (
-    <article>
+    <article className="mx-auto max-w-2xl">
       <ScriptJsonLd data={articleJsonLd} />
 
       <nav className="mb-8" aria-label="Back to blog">
@@ -82,16 +82,16 @@ export default async function BlogPostPage({ params }: Props) {
       </nav>
 
       <header className="border-b border-border pb-8">
-        <p className="font-mono text-xs text-muted">
+        <p className="text-sm text-muted">
           {formatDate(post.publishedAt)} · {post.readingTime}
           {post.source === "medium" ? " · via Medium" : ""}
         </p>
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight">{post.title}</h1>
-        <p className="mt-3 text-pretty leading-7 text-muted">{post.description}</p>
+        <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl sm:leading-[1.1]">{post.title}</h1>
+        <p className="mt-5 text-pretty text-lg leading-8 text-muted">{post.description}</p>
         {post.externalUrl ? (
           <a
             href={post.externalUrl}
-            className="btn-outline mt-5 inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm"
+            className="link mt-5 inline-flex items-center gap-1 text-sm font-medium"
           >
             Read original on Medium
             <ArrowUpRight className="size-3.5" aria-hidden />
@@ -114,12 +114,12 @@ export default async function BlogPostPage({ params }: Props) {
           {older ? (
             <Link
               href={`/blog/${older.slug}`}
-              className="group flex-1 rounded-xl border border-border bg-card/70 p-4 transition hover:-translate-y-0.5 hover:border-foreground/25"
+              className="group flex-1 rounded-lg border border-border p-4 transition-colors hover:border-foreground/25"
             >
-              <p className="inline-flex items-center gap-1.5 font-mono text-xs text-muted">
+              <p className="inline-flex items-center gap-1.5 text-xs text-muted">
                 <ArrowLeft className="size-3.5" aria-hidden /> Older
               </p>
-              <p className="mt-1.5 text-sm font-medium leading-6 group-hover:text-accent">
+              <p className="mt-1.5 text-sm font-medium leading-6 group-hover:underline underline-offset-4">
                 {older.title}
               </p>
             </Link>
@@ -129,12 +129,12 @@ export default async function BlogPostPage({ params }: Props) {
           {newer ? (
             <Link
               href={`/blog/${newer.slug}`}
-              className="group flex-1 rounded-xl border border-border bg-card/70 p-4 text-right transition hover:-translate-y-0.5 hover:border-foreground/25"
+              className="group flex-1 rounded-lg border border-border p-4 text-right transition-colors hover:border-foreground/25"
             >
-              <p className="inline-flex items-center gap-1.5 font-mono text-xs text-muted">
+              <p className="inline-flex items-center gap-1.5 text-xs text-muted">
                 Newer <ArrowRight className="size-3.5" aria-hidden />
               </p>
-              <p className="mt-1.5 text-sm font-medium leading-6 group-hover:text-accent">
+              <p className="mt-1.5 text-sm font-medium leading-6 group-hover:underline underline-offset-4">
                 {newer.title}
               </p>
             </Link>

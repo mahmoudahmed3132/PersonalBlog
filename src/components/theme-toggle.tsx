@@ -13,7 +13,7 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggle}
-      className="inline-flex size-9 items-center justify-center rounded-md border border-border bg-surface text-muted transition hover:border-foreground/25 hover:text-foreground"
+      className="inline-flex size-9 items-center justify-center rounded-md text-muted transition-colors hover:text-foreground"
       aria-label="Toggle theme"
     >
       <Moon className="theme-icon-moon size-4" aria-hidden />

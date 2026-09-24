@@ -17,46 +17,40 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-md">
-      <div className="mx-auto w-full max-w-3xl px-4">
-        <div className="flex h-14 items-center justify-between gap-3">
-          <Link
-            href="/"
-            aria-label="Home"
-            className="skill-inner-shadow flex size-9 shrink-0 items-center justify-center rounded-md border border-border bg-surface font-mono text-sm font-bold tracking-tight transition hover:border-foreground/30"
-          >
-            {siteConfig.author.initials}
+    <header className="sticky top-0 z-40 bg-background/85 backdrop-blur">
+      <div className="mx-auto w-full max-w-4xl px-5 sm:px-8">
+        <div className="flex h-16 items-center justify-between gap-4">
+          <Link href="/" className="shrink-0 font-semibold tracking-tight">
+            <span className="sm:hidden">{siteConfig.name.split(" ")[0]}</span>
+            <span className="hidden sm:inline">{siteConfig.name}</span>
           </Link>
 
-          <nav className="flex items-center gap-1 text-sm" aria-label="Main">
-            {siteConfig.nav.map((item) => {
-              const active = isActive(item.href);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  aria-current={active ? "page" : undefined}
-                  className={`relative rounded-md px-2.5 py-1.5 transition sm:px-3 ${
-                    active
-                      ? "font-medium text-foreground"
-                      : "text-muted hover:text-foreground"
-                  }`}
-                >
-                  {item.label}
-                  <span
-                    aria-hidden
-                    className={`absolute inset-x-2.5 -bottom-[9px] h-0.5 rounded-full transition-all sm:inset-x-3 ${
-                      active ? "bg-accent opacity-100" : "opacity-0"
-                    }`}
-                  />
-                </Link>
-              );
-            })}
-          </nav>
-
-          <div className="flex items-center justify-end gap-2">
-            <CommandPalette />
-            <ThemeToggle />
+          <div className="flex min-w-0 items-center gap-1 sm:gap-5">
+            <nav className="flex min-w-0 items-center gap-3.5 overflow-x-auto text-sm [scrollbar-width:none] sm:gap-6" aria-label="Main">
+              {siteConfig.nav
+                .filter((item) => item.href !== "/")
+                .map((item) => {
+                  const active = isActive(item.href);
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      aria-current={active ? "page" : undefined}
+                      className={`shrink-0 transition-colors ${
+                        active ? "text-foreground" : "text-muted hover:text-foreground"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                })}
+            </nav>
+            <div className="flex shrink-0 items-center">
+              <div className="hidden sm:block">
+                <CommandPalette />
+              </div>
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </div>
@@ -68,36 +62,21 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-24 border-t border-border/60">
-      <div className="mx-auto w-full max-w-3xl px-4 py-12">
-        <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
-          <div className="max-w-xs">
-            <p className="font-mono text-sm font-bold">{siteConfig.author.initials} — {siteConfig.name}</p>
-            <p className="mt-2 text-sm leading-6 text-secondary">
-              {siteConfig.role} based in {siteConfig.location}.
-            </p>
-            <p className="mt-3 text-xs text-muted">
-              © {year}. Built with Next.js, Tailwind CSS, and too much coffee.
-            </p>
-          </div>
-          <nav
-            className="flex flex-col gap-2 text-sm"
-            aria-label="Footer"
-          >
-            {siteConfig.footer.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-muted transition hover:text-foreground"
-              >
-                {item.label}
-              </Link>
-            ))}
-            <Link href="/resume" className="text-accent transition hover:text-accent-strong">
-              Résumé →
+    <footer className="mt-16">
+      <div className="mx-auto flex w-full max-w-4xl flex-col gap-4 border-t border-border px-5 py-10 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-8">
+        <p>
+          © {year} {siteConfig.name} · {siteConfig.location}
+        </p>
+        <nav className="flex flex-wrap gap-x-5 gap-y-2" aria-label="Footer">
+          {siteConfig.footer.map((item) => (
+            <Link key={item.href} href={item.href} className="transition-colors hover:text-foreground">
+              {item.label}
             </Link>
-          </nav>
-        </div>
+          ))}
+          <Link href="/resume" className="transition-colors hover:text-foreground">
+            Résumé
+          </Link>
+        </nav>
       </div>
     </footer>
   );

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowUpRight, Award, FileText } from "lucide-react";
+import { ArrowUpRight, FileText } from "lucide-react";
 import { PageHeader, TagList } from "@/components/ui";
 import { certifications, expertise, resumeExperience, resumeStats } from "@/lib/resume-data";
 
@@ -36,7 +36,7 @@ export default function WorkPage() {
         </div>
       </PageHeader>
 
-      <div className="mb-10 flex flex-wrap gap-x-8 gap-y-2 rounded-xl border border-border bg-card/70 px-4 py-3 text-sm">
+      <div className="mb-12 flex flex-wrap gap-x-8 gap-y-2 border-y border-border py-4 text-sm">
         {resumeStats.map((stat) => (
           <div key={stat.label} className="flex gap-1.5">
             <span className="text-muted">{stat.label}:</span>
@@ -45,32 +45,28 @@ export default function WorkPage() {
         ))}
       </div>
 
-      <ol className="relative space-y-10 border-l border-border pl-7">
+      <ol className="space-y-14">
         {resumeExperience.map((item) => (
           <li key={`${item.company}-${item.role}`} className="relative">
-            <span
-              className="absolute -left-[35px] top-1.5 size-3 rounded-full border-[3px] border-background bg-accent"
-              aria-hidden
-            />
             <div className="flex flex-col gap-1.5 sm:flex-row sm:items-baseline sm:justify-between">
-              <h2 className="text-lg font-semibold">
+              <h2 className="text-lg font-semibold tracking-tight">
                 {item.role} —{" "}
                 <a
                   href={item.companyUrl}
-                  className="text-accent hover:underline underline-offset-4"
+                  className="link"
                 >
                   {item.company}
                   <ArrowUpRight className="ml-0.5 inline size-4" aria-hidden />
                 </a>
               </h2>
-              <p className="shrink-0 font-mono text-xs text-muted">
+              <p className="shrink-0 text-sm tabular-nums text-muted">
                 {item.period} · {item.location}
               </p>
             </div>
             <ul className="mt-4 space-y-2 text-sm leading-6 text-muted">
               {item.highlights.map((highlight) => (
                 <li key={highlight} className="flex gap-2.5">
-                  <span className="mt-[9px] size-1.5 shrink-0 rounded-full bg-accent/70" aria-hidden />
+                  <span className="mt-[11px] h-px w-3 shrink-0 bg-muted" aria-hidden />
                   {highlight}
                 </li>
               ))}
@@ -82,8 +78,8 @@ export default function WorkPage() {
         ))}
       </ol>
 
-      <section className="mt-16" id="expertise">
-        <h2 className="text-xl font-bold tracking-tight">Toolbox</h2>
+      <section className="mt-24" id="expertise">
+        <h2 className="border-b border-border pb-3 text-lg font-semibold tracking-tight">Toolbox</h2>
         <dl className="mt-5 grid gap-x-8 gap-y-3 text-sm sm:grid-cols-2">
           {expertise.map((item) => (
             <div key={item.area} className="flex gap-2">
@@ -94,16 +90,15 @@ export default function WorkPage() {
         </dl>
       </section>
 
-      <section className="mt-12" id="certifications">
-        <h2 className="text-xl font-bold tracking-tight">Certifications</h2>
-        <ul className="mt-5 grid gap-2 text-sm sm:grid-cols-2">
+      <section className="mt-20" id="certifications">
+        <h2 className="border-b border-border pb-3 text-lg font-semibold tracking-tight">Certifications</h2>
+        <ul className="mt-2 grid gap-x-10 text-sm sm:grid-cols-2">
           {certifications.map((cert) => (
             <li
               key={cert}
-              className="skill-inner-shadow flex items-start gap-2.5 rounded-lg border border-border bg-card/70 px-3.5 py-3"
+              className="border-b border-border py-3 leading-6 text-secondary"
             >
-              <Award className="mt-0.5 size-4 shrink-0 text-accent" aria-hidden />
-              <span className="leading-6">{cert}</span>
+              {cert}
             </li>
           ))}
         </ul>
