@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import { Footer, Header } from "@/components/layout";
-import { ScreenDog } from "@/components/screen-dog";
+import { Console } from "@/components/console";
+import { getAllBlogPosts, postHref } from "@/lib/blog";
 import { siteConfig } from "@/lib/site-config";
 import "./globals.css";
 
@@ -132,11 +133,11 @@ export default function RootLayout({
           Skip to content
         </a>
         <Header />
-        <ScreenDog />
         <main id="main-content" className="mx-auto w-full max-w-4xl flex-1 px-5 py-16 sm:px-8 sm:py-20">
           {children}
         </main>
         <Footer />
+        <Console posts={getAllBlogPosts().map((post) => ({ title: post.title, href: postHref(post) }))} />
       </body>
     </html>
   );

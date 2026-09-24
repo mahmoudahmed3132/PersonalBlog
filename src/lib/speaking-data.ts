@@ -15,6 +15,8 @@ export type SpeakingEvent = {
   talkTitle: string;
   /** Link to the event page, recording, or LinkedIn post; leave "" to hide. */
   url: string;
+  /** Slug of the blog write-up in content/blog, or "" if none. */
+  postSlug: string;
   /** One-sentence context shown under the title. */
   description: string;
   photos: SpeakingPhoto[];
@@ -31,6 +33,7 @@ export const speakingEvents: SpeakingEvent[] = [
     location: "",
     talkTitle: "See More, Stop More",
     url: "https://www.linkedin.com/feed/update/urn:li:activity:7486366734661124096/",
+    postSlug: "see-more-stop-more",
     description:
       "Presented “See More, Stop More” at CrowdStrike’s Adversary Simulation event — on detection visibility and stopping more adversaries.",
     photos: [

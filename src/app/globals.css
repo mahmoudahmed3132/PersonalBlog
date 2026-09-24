@@ -137,6 +137,24 @@ main {
   display: block;
 }
 
+/* ---------- Console ---------- */
+@keyframes console-in {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.console-panel {
+  animation: console-in 0.16s ease-out both;
+}
+
+.console-panel input:focus-visible {
+  outline: none;
+}
+
 /* ---------- Photos ---------- */
 .photo {
   background: var(--subtle);
@@ -163,8 +181,30 @@ main {
   line-height: 1.8;
 }
 
+.prose :where(h2) {
+  margin-top: 3rem;
+  font-size: 1.5rem;
+  line-height: 1.3;
+}
+
+.prose :where(h3) {
+  font-size: 1.2rem;
+}
+
 .prose :where(ul, ol) {
   padding-left: 1.25rem;
+}
+
+.prose :where(ul) {
+  list-style: disc;
+}
+
+.prose :where(ol) {
+  list-style: decimal;
+}
+
+.prose :where(li)::marker {
+  color: var(--muted);
 }
 
 .prose :where(a) {
@@ -201,52 +241,46 @@ main {
   line-height: 1.7;
 }
 
+.prose :where(strong) {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.prose :where(li + li) {
+  margin-top: 0.4rem;
+}
+
+.prose :where(table) {
+  display: block;
+  width: 100%;
+  margin-top: 1.5rem;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.prose :where(th, td) {
+  border-bottom: 1px solid var(--border);
+  padding: 0.6rem 1.25rem 0.6rem 0;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.prose :where(th) {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.prose :where(td:first-child) {
+  white-space: normal;
+  min-width: 11rem;
+}
+
 .prose :where(pre code) {
   background: transparent;
   padding: 0;
   color: inherit;
-}
-
-/* ---------- Screen pet ---------- */
-.screen-pet-layer {
-  pointer-events: none;
-  position: fixed;
-  inset: 0;
-  z-index: 30;
-  overflow: hidden;
-}
-
-.screen-pet-runner {
-  position: absolute;
-  left: 0;
-  top: 0;
-  transform-origin: center bottom;
-  will-change: transform;
-}
-
-.screen-pet {
-  display: block;
-  width: 42px;
-  height: auto;
-  image-rendering: pixelated;
-  filter: drop-shadow(0 1px 0 rgb(0 0 0 / 0.12));
-  animation: screen-pet-step 0.48s steps(2, end) infinite;
-}
-
-.screen-pet-runner[data-state="run"] .screen-pet {
-  animation-duration: 0.32s;
-}
-
-@keyframes screen-pet-step {
-  50% {
-    transform: translateY(-2px);
-  }
-}
-
-@media (max-width: 640px) {
-  .screen-pet {
-    width: 34px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -254,8 +288,8 @@ main {
     scroll-behavior: auto;
   }
 
-  .screen-pet,
-  main {
+  main,
+  .console-panel {
     animation: none;
   }
 }
@@ -284,7 +318,6 @@ main {
 
   header,
   footer,
-  .screen-pet-layer,
   .no-print {
     display: none !important;
   }

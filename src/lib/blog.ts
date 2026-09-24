@@ -92,3 +92,8 @@ export function formatDate(date: string) {
     year: "numeric",
   }).format(new Date(date));
 }
+
+/** Medium mirrors are summaries only — send readers straight to the full article. */
+export function postHref(post: Pick<BlogPost, "slug" | "externalUrl">) {
+  return post.externalUrl ?? `/blog/${post.slug}`;
+}

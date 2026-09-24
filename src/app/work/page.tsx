@@ -1,8 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight, FileText } from "lucide-react";
-import { PageHeader, TagList } from "@/components/ui";
-import { certifications, expertise, resumeExperience, resumeStats } from "@/lib/resume-data";
+import { CertificationList, PageHeader, TagList } from "@/components/ui";
+import {
+  certifications,
+  credentialsProfileUrl,
+  expertise,
+  resumeExperience,
+  resumeStats,
+} from "@/lib/resume-data";
 
 export const metadata: Metadata = {
   title: "Work",
@@ -92,16 +98,14 @@ export default function WorkPage() {
 
       <section className="mt-20" id="certifications">
         <h2 className="border-b border-border pb-3 text-lg font-semibold tracking-tight">Certifications</h2>
-        <ul className="mt-2 grid gap-x-10 text-sm sm:grid-cols-2">
-          {certifications.map((cert) => (
-            <li
-              key={cert}
-              className="border-b border-border py-3 leading-6 text-secondary"
-            >
-              {cert}
-            </li>
-          ))}
-        </ul>
+        <div className="mt-2">
+          <CertificationList items={certifications} />
+        </div>
+        {credentialsProfileUrl ? (
+          <a href={credentialsProfileUrl} className="link mt-5 inline-block text-sm font-medium">
+            Verify all on Credly ↗
+          </a>
+        ) : null}
       </section>
     </>
   );
