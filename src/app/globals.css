@@ -1,18 +1,25 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #131313;
-  --muted: #6b6b70;
-  --muted-foreground: #6b6b70;
-  --border: #e6e6e9;
+  --background: #fbfbfa;
+  --foreground: #111315;
+  --muted: #62666d;
+  --muted-foreground: #62666d;
+  --border: #e3e4e6;
   --surface: #ffffff;
   --card: #ffffff;
-  --subtle: #f6f6f7;
+  --subtle: #f3f4f4;
   --accent: #0a7f5f;
-  --accent-strong: #086b50;
+  --accent-strong: #066449;
   --accent-soft: rgba(10, 127, 95, 0.09);
+  --accent-2: #0e7490;
+  --warn: #b45309;
+  --danger: #be123c;
   --glow: rgba(10, 127, 95, 0.14);
+  --term-bg: #0d1117;
+  --term-fg: #d6dde6;
+  --term-muted: #7d8590;
+  --term-border: rgba(255, 255, 255, 0.08);
 }
 
 @theme inline {
@@ -27,23 +34,31 @@
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
   --color-accent-soft: var(--accent-soft);
-  --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
+  --color-accent-2: var(--accent-2);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SFMono-Regular", monospace;
 }
 
 .dark {
-  --background: #121214;
-  --foreground: #f2f2f2;
-  --muted: #9a9aa2;
-  --muted-foreground: #9a9aa2;
-  --border: rgba(255, 255, 255, 0.11);
-  --surface: #1a1a1d;
-  --card: #1d1d21;
-  --subtle: #232327;
-  --accent: #34d399;
-  --accent-strong: #6ee7b7;
-  --accent-soft: rgba(52, 211, 153, 0.1);
-  --glow: rgba(52, 211, 153, 0.12);
+  --background: #0a0c0f;
+  --foreground: #e8ecef;
+  --muted: #8b949e;
+  --muted-foreground: #8b949e;
+  --border: rgba(255, 255, 255, 0.09);
+  --surface: #0f1318;
+  --card: #10151b;
+  --subtle: #161c23;
+  --accent: #3ee6a1;
+  --accent-strong: #7cf5c3;
+  --accent-soft: rgba(62, 230, 161, 0.1);
+  --accent-2: #5ccfe6;
+  --warn: #f5b454;
+  --danger: #ff7a90;
+  --glow: rgba(62, 230, 161, 0.14);
+  --term-bg: #07090c;
+  --term-border: rgba(255, 255, 255, 0.09);
 }
 
 html {
@@ -53,7 +68,7 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-feature-settings: "cv11", "ss01";
 }
 
@@ -156,13 +171,15 @@ main {
 }
 
 .btn-accent {
-  background: var(--foreground);
+  background: var(--accent);
   color: var(--background);
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 0 0 1px var(--accent), 0 8px 24px -12px var(--glow);
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .btn-accent:hover {
-  opacity: 0.85;
+  background: var(--accent-strong);
+  box-shadow: 0 0 0 1px var(--accent-strong), 0 10px 30px -10px var(--glow);
   transform: translateY(-1px);
 }
 
@@ -202,7 +219,7 @@ main {
 }
 
 ::selection {
-  background: var(--foreground);
+  background: var(--accent);
   color: var(--background);
 }
 
@@ -260,17 +277,34 @@ main {
   border-radius: 0.375rem;
   background: var(--subtle);
   padding: 0.125rem 0.25rem;
-  font-family: var(--font-geist-mono);
+  font-family: var(--font-mono);
   font-size: 0.9em;
 }
 
 .prose :where(pre) {
-  margin-top: 1rem;
   overflow-x: auto;
-  border-radius: 0.5rem;
-  background: #111111;
-  padding: 1rem;
-  color: #f6f6f6;
+  background: var(--term-bg);
+  padding: 1rem 1.1rem;
+  color: var(--term-fg);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+
+.prose :where(h2)::before {
+  content: "## ";
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.prose :where(h3)::before {
+  content: "### ";
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  opacity: 0.8;
 }
 
 .prose :where(pre code) {
@@ -278,6 +312,236 @@ main {
   background: transparent;
   padding: 0;
   color: inherit;
+}
+
+/* ---------- Page backdrop: dot matrix + faint scanlines ---------- */
+.page-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  pointer-events: none;
+  background-image: radial-gradient(color-mix(in srgb, var(--foreground) 9%, transparent) 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image: linear-gradient(to bottom, black, transparent 85%);
+}
+
+.dark .page-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgb(255 255 255 / 0.018) 0,
+    rgb(255 255 255 / 0.018) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+/* ---------- Section numbering: "01 // what_i_do" ---------- */
+main {
+  counter-reset: section;
+}
+
+.section-eyebrow::before {
+  counter-increment: section;
+  content: counter(section, decimal-leading-zero) " // ";
+  color: var(--muted);
+}
+
+/* ---------- Cards: HUD corner brackets on hover ---------- */
+.hud-card {
+  position: relative;
+}
+
+.hud-card::before,
+.hud-card::after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: var(--accent);
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
+}
+
+.hud-card::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid var(--accent);
+  border-left: 2px solid var(--accent);
+  border-top-left-radius: 0.75rem;
+  transform: translate(3px, 3px);
+}
+
+.hud-card::after {
+  right: -1px;
+  bottom: -1px;
+  border-right: 2px solid var(--accent);
+  border-bottom: 2px solid var(--accent);
+  border-bottom-right-radius: 0.75rem;
+  transform: translate(-3px, -3px);
+}
+
+.hud-card:hover::before,
+.hud-card:hover::after,
+.hud-card:focus-visible::before,
+.hud-card:focus-visible::after {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+.hud-card:hover {
+  box-shadow: 0 0 0 1px var(--accent-soft), 0 12px 32px -18px var(--glow);
+}
+
+/* ---------- Terminal window ---------- */
+.term-window {
+  overflow: hidden;
+  border: 1px solid var(--term-border);
+  border-radius: 0.75rem;
+  background: var(--term-bg);
+  color: var(--term-fg);
+  box-shadow: 0 24px 60px -30px rgb(0 0 0 / 0.55);
+}
+
+.term-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--term-border);
+  background: rgb(255 255 255 / 0.03);
+  padding: 0.55rem 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--term-muted);
+}
+
+.term-dots {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.term-dots > span {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: #ff5f57;
+}
+
+.term-dots > span:nth-child(2) {
+  background: #febc2e;
+}
+
+.term-dots > span:nth-child(3) {
+  background: #28c840;
+}
+
+.term-body {
+  padding: 1rem 1.1rem 1.15rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.75;
+}
+
+.term-prompt {
+  color: #3ee6a1;
+}
+
+.term-path {
+  color: #5ccfe6;
+}
+
+.term-key {
+  color: #c792ea;
+}
+
+.term-str {
+  color: #f5d67b;
+}
+
+.term-num {
+  color: #ff9e64;
+}
+
+.term-comment {
+  color: var(--term-muted);
+}
+
+.term-line {
+  opacity: 0;
+  animation: term-line-in 0.01s linear forwards;
+}
+
+@keyframes term-line-in {
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------- Hover glitch on hero name ---------- */
+.glitch {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch:hover {
+  animation: glitch-shift 0.35s steps(2, end) 2;
+}
+
+@keyframes glitch-shift {
+  0% {
+    text-shadow: 2px 0 var(--accent-2), -2px 0 var(--danger);
+  }
+  50% {
+    text-shadow: -2px 0 var(--accent-2), 2px 0 var(--danger);
+  }
+  100% {
+    text-shadow: none;
+  }
+}
+
+/* ---------- Reading progress ---------- */
+.reading-progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 60;
+  height: 2px;
+  transform-origin: left;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 10px var(--glow);
+}
+
+/* ---------- Status line (footer) ---------- */
+.statusline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.statusline > span {
+  padding: 0.35rem 0.7rem;
+  border-right: 1px solid var(--border);
+}
+
+.statusline > span:last-child {
+  border-right: 0;
+  border-left: 1px solid var(--border);
+}
+
+.statusline > .mode {
+  background: var(--accent);
+  color: var(--background);
+  font-weight: 700;
+  letter-spacing: 0.06em;
 }
 
 /* ---------- Screen pet ---------- */
@@ -333,8 +597,14 @@ main {
     animation: none;
   }
 
-  .typed-caret {
+  .typed-caret,
+  .glitch:hover {
     animation: none;
+  }
+
+  .term-line {
+    animation: none;
+    opacity: 1;
   }
 }
 
@@ -380,6 +650,8 @@ main {
   header,
   footer,
   .screen-pet-layer,
+  .page-backdrop,
+  .reading-progress,
   .no-print {
     display: none !important;
   }

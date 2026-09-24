@@ -1,5 +1,14 @@
 import Link from "next/link";
 
+/** "What I do" -> "what_i_do" */
+export function toSnake(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_|_$/g, "");
+}
+
 export function Section({
   title,
   eyebrow = "Featured",
@@ -15,18 +24,23 @@ export function Section({
 }) {
   return (
     <section className="mt-20 scroll-mt-24" id={id}>
-      <div>
-        <p className="font-mono text-xs uppercase tracking-widest text-accent">{eyebrow}</p>
-        <h2 className="mt-1 text-2xl font-bold tracking-tight">{title}</h2>
+      <div className="flex items-end gap-4">
+        <div>
+          <p className="section-eyebrow font-mono text-xs text-accent">{toSnake(eyebrow)}</p>
+          <h2 className="mt-1 text-2xl font-bold tracking-tight">{title}</h2>
+        </div>
+        <span aria-hidden className="mb-2.5 hidden h-px flex-1 bg-gradient-to-r from-border to-transparent sm:block" />
       </div>
       <div className="mt-7">{children}</div>
       {action ? (
         <div className="mt-8 flex justify-center">
           <Link
             href={action.href}
-            className="btn-outline rounded-md px-4 py-2 text-sm"
+            className="btn-outline group inline-flex items-center gap-2 rounded-md px-4 py-2 font-mono text-xs"
           >
+            <span className="text-accent">&gt;</span>
             {action.label}
+            <span aria-hidden className="transition group-hover:translate-x-0.5">→</span>
           </Link>
         </div>
       ) : null}
@@ -47,8 +61,13 @@ export function PageHeader({
 }) {
   return (
     <div className="mb-10">
-      <p className="font-mono text-xs uppercase tracking-widest text-accent">{eyebrow}</p>
-      <h1 className="mt-1 text-3xl font-bold tracking-tight">{title}</h1>
+      <p className="font-mono text-xs text-muted">
+        <span className="text-accent">~/</span>
+        {toSnake(title)}
+        <span className="text-accent"> $</span> cat README.md
+        <span className="ml-3 opacity-70"># {eyebrow.toLowerCase()}</span>
+      </p>
+      <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">{title}</h1>
       {description ? (
         <p className="mt-4 max-w-2xl text-pretty leading-7 text-secondary">{description}</p>
       ) : null}
@@ -67,7 +86,7 @@ export function Card({
   className?: string;
 }) {
   const base =
-    "block rounded-xl border border-border bg-card/70 p-4 transition duration-300 hover:-translate-y-0.5 hover:border-foreground/25 hover:bg-subtle/70";
+    "hud-card block rounded-xl border border-border bg-card/70 p-4 transition duration-300 hover:-translate-y-0.5 hover:border-foreground/25 hover:bg-subtle/70";
   const resolved = `${base} ${className}`.trim();
 
   if (href) {
@@ -108,8 +127,8 @@ export function StatBand({
           key={stat.label}
           className="skill-inner-shadow rounded-xl border border-border bg-card/70 px-4 py-3"
         >
-          <dd className="text-xl font-bold tracking-tight">{stat.value}</dd>
-          <dt className="mt-0.5 text-xs font-medium text-muted">{stat.label}</dt>
+          <dd className="font-mono text-2xl font-bold tracking-tight text-accent">{stat.value}</dd>
+          <dt className="mt-0.5 text-xs font-medium text-foreground/80">{stat.label}</dt>
           {stat.hint ? <p className="mt-1 text-[11px] leading-4 text-muted">{stat.hint}</p> : null}
         </div>
       ))}

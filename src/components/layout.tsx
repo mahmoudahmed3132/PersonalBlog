@@ -23,12 +23,14 @@ export function Header() {
           <Link
             href="/"
             aria-label="Home"
-            className="skill-inner-shadow flex size-9 shrink-0 items-center justify-center rounded-md border border-border bg-surface font-mono text-sm font-bold tracking-tight transition hover:border-foreground/30"
+            className="group flex shrink-0 items-center gap-1 font-mono text-sm font-bold tracking-tight"
           >
-            {siteConfig.author.initials}
+            <span className="text-accent">~/</span>
+            <span className="lowercase">{siteConfig.author.initials}</span>
+            <span className="typed-caret !h-4 opacity-0 transition group-hover:opacity-100" aria-hidden />
           </Link>
 
-          <nav className="flex items-center gap-1 text-sm" aria-label="Main">
+          <nav className="-mx-1 flex min-w-0 items-center overflow-x-auto px-1 [scrollbar-width:none] sm:gap-1 sm:overflow-visible" aria-label="Main">
             {siteConfig.nav.map((item) => {
               const active = isActive(item.href);
               return (
@@ -36,16 +38,19 @@ export function Header() {
                   key={item.href}
                   href={item.href}
                   aria-current={active ? "page" : undefined}
-                  className={`relative rounded-md px-2.5 py-1.5 transition sm:px-3 ${
+                  className={`relative shrink-0 rounded-md px-1.5 py-1.5 font-mono ${item.href === "/" ? "hidden sm:block" : ""} text-xs lowercase transition sm:px-2.5 sm:text-[13px] ${
                     active
-                      ? "font-medium text-foreground"
+                      ? "text-foreground"
                       : "text-muted hover:text-foreground"
                   }`}
                 >
+                  <span className={active ? "text-accent" : "hidden sm:inline sm:opacity-40"} aria-hidden>
+                    {active ? "> " : "/"}
+                  </span>
                   {item.label}
                   <span
                     aria-hidden
-                    className={`absolute inset-x-2.5 -bottom-[9px] h-0.5 rounded-full transition-all sm:inset-x-3 ${
+                    className={`absolute inset-x-2 -bottom-[9px] h-0.5 rounded-full shadow-[0_0_8px_var(--glow)] transition-all sm:inset-x-2.5 ${
                       active ? "bg-accent opacity-100" : "opacity-0"
                     }`}
                   />
@@ -54,7 +59,7 @@ export function Header() {
             })}
           </nav>
 
-          <div className="flex items-center justify-end gap-2">
+          <div className="flex shrink-0 items-center justify-end gap-2">
             <CommandPalette />
             <ThemeToggle />
           </div>
@@ -66,37 +71,42 @@ export function Header() {
 
 export function Footer() {
   const year = new Date().getFullYear();
-
   return (
     <footer className="mt-24 border-t border-border/60">
       <div className="mx-auto w-full max-w-3xl px-4 py-12">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
           <div className="max-w-xs">
-            <p className="font-mono text-sm font-bold">{siteConfig.author.initials} — {siteConfig.name}</p>
-            <p className="mt-2 text-sm leading-6 text-secondary">
-              {siteConfig.role} based in {siteConfig.location}.
+            <p className="font-mono text-sm font-bold">
+              <span className="text-accent">~/</span>
+              {siteConfig.author.initials.toLowerCase()} <span className="font-normal text-muted">— {siteConfig.name}</span>
             </p>
-            <p className="mt-3 text-xs text-muted">
-              © {year}. Built with Next.js, Tailwind CSS, and too much coffee.
+            <p className="mt-2 text-sm leading-6 text-secondary">
+              {siteConfig.role} based in {siteConfig.location}. Writing detections, chasing adversaries, shipping
+              automation.
             </p>
           </div>
-          <nav
-            className="flex flex-col gap-2 text-sm"
-            aria-label="Footer"
-          >
+          <nav className="grid grid-cols-2 gap-x-8 gap-y-2 font-mono text-xs sm:text-right" aria-label="Footer">
             {siteConfig.footer.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-muted transition hover:text-foreground"
-              >
-                {item.label}
+              <Link key={item.href} href={item.href} className="text-muted transition hover:text-accent">
+                {item.label.toLowerCase()}
               </Link>
             ))}
             <Link href="/resume" className="text-accent transition hover:text-accent-strong">
-              Résumé →
+              resume.pdf →
             </Link>
           </nav>
+        </div>
+
+        <div className="statusline mt-10" aria-label="Site status">
+          <span className="mode">NORMAL</span>
+          <span className="text-foreground/80">~/personal-blog</span>
+          <span className="hidden sm:inline">
+            <span className="text-accent">⎇</span> main
+          </span>
+          <span className="hidden sm:inline">next.js · tailwind</span>
+          <span className="ml-auto">
+            <span className="text-accent">●</span> utf-8 · © {year}
+          </span>
         </div>
       </div>
     </footer>
