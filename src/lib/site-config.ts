@@ -106,7 +106,7 @@ export const experience = [
   {
     company: "BARQ Systems",
     role: "Mid-Sr Cyber Defense Engineer",
-    period: "Nov 2024 - Mar 2026",
+    period: "Jan 2025 - Mar 2026",
     location: "Egypt",
     description:
       "Led Elastic, FortiSIEM, FortiSOAR, and CrowdStrike implementation work while supporting SOC-as-a-Service engineering and customer enablement.",
@@ -114,7 +114,7 @@ export const experience = [
   {
     company: "Limatrix INC.",
     role: "Security Engineer I",
-    period: "May 2023 - Nov 2024",
+    period: "Jan 2024 - Dec 2024",
     location: "Egypt",
     description:
       "Provided SOC monitoring and incident response, coordinated investigations, and tuned MITRE ATT&CK-aligned detections.",
