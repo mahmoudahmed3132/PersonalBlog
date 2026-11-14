@@ -30,7 +30,7 @@ function heroLayers(): [HeroLayer, HeroLayer, HeroLayer] {
     { src: sky, alt: "" },
     {
       src: subject,
-      alt: "Ink illustration of Mahmoud in headphones, eyes closed, leaning on an Alfa Romeo Giulia Quadrifoglio in tall grass at dusk.",
+      alt: "Ink illustration of Mahmoud in headphones, standing in front of an Alfa Romeo Giulia Quadrifoglio.",
     },
     { src: foreground, alt: "" },
   ];
