@@ -12,6 +12,32 @@ requests a file that isn't there.
 | `layer-1-subject.png` | Mahmoud with headphones, leaning on the Giulia Quadrifoglio | Transparent | ±14px |
 | `layer-2-foreground.png` | Ink grass and brush strokes along the bottom | Transparent | ±28px |
 
+## The current subject layer
+
+`layer-1-subject.png` is generated, not drawn by hand. It's Mahmoud cut out of
+`public/speaking/speaking-networking.jpg`, converted to ink style (solid blacks,
+hatching, contour lines, and a waist that dissolves into dry-brush strokes), with
+headphones added, standing in front of a Giulia Quadrifoglio drawn as brush-ink
+vector art with a red cloverleaf. Rebuild it with:
+
+```sh
+pip install --target /tmp/pylib opencv-python-headless numpy pillow
+python3 -I scripts/hero/cutout.py /tmp/pylib public/speaking/speaking-networking.jpg /tmp/cutout.png
+python3 -I scripts/hero/compose_subject.py /tmp/pylib /tmp/cutout.png /tmp/subject.png
+```
+
+Then quantize it to 64 colours and save it here. The second script prints the
+ear-cup position. If you move the subject, update `CUP` in
+`src/components/music-notes.tsx` to match. A real illustration with the same
+name and specs replaces it. Sky and foreground are still the procedural SVG layers.
+
+## Motion
+
+- The pointer moves the layers by ±10/26/52 px (back to front), with spring easing.
+- After 2.2 s without pointer movement, and always on touch screens, the scene drifts on its own.
+- Ink music notes rise from the ear cup, the grass sways, and the sky mist drifts.
+- `prefers-reduced-motion` turns all of it off.
+
 ## Specs (all three layers)
 
 - 2400×1350 px (16:9), PNG. Layers 1 and 2 need real alpha. Keep each under about 1.5 MB (`pngquant --quality 70-90` works well on ink art).

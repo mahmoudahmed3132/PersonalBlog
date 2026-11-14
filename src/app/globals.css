@@ -222,6 +222,68 @@ main {
   transform: translateX(-70%);
 }
 
+/* ---------- Hero motion: notes from the headphones, grass in the wind, drifting mist ---------- */
+.music-note {
+  opacity: 0;
+  animation: note-rise 6.2s cubic-bezier(0.3, 0.1, 0.4, 1) infinite;
+}
+
+@keyframes note-rise {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(-8deg) scale(calc(var(--s) * 0.6));
+  }
+  14% {
+    opacity: 0.9;
+  }
+  70% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) rotate(12deg) scale(var(--s));
+  }
+}
+
+.ink-layer[data-layer="2"] .ink-canvas > * {
+  transform-origin: 50% 100%;
+  animation: grass-sway 5.5s ease-in-out infinite alternate;
+}
+
+@keyframes grass-sway {
+  from {
+    transform: skewX(-1.6deg);
+  }
+  to {
+    transform: skewX(1.4deg);
+  }
+}
+
+.ink-layer[data-layer="0"] .ink-canvas > * {
+  animation: mist-drift 24s ease-in-out infinite alternate;
+}
+
+@keyframes mist-drift {
+  from {
+    transform: translateX(-1.2%) scale(1.02);
+  }
+  to {
+    transform: translateX(1.2%) scale(1.02);
+  }
+}
+
+/* Phones: the headline sits over the art, so drop the scene below the buttons
+   (the waist fade and grass absorb the crop) and keep the notes out of the type. */
+@media (max-width: 767px) {
+  .ink-canvas {
+    bottom: -26cqh;
+  }
+
+  .music-note {
+    display: none;
+  }
+}
+
 /* Keeps type legible over whatever the final art puts behind it. */
 .ink-scrim {
   position: absolute;
@@ -423,6 +485,15 @@ main {
   .ink-layer {
     will-change: auto;
     transform: none !important;
+  }
+
+  .music-note,
+  .ink-layer .ink-canvas > * {
+    animation: none !important;
+  }
+
+  .music-note {
+    opacity: 0;
   }
 }
 
