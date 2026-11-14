@@ -133,7 +133,7 @@ export default function RootLayout({
           Skip to content
         </a>
         <Header />
-        <main id="main-content" className="mx-auto w-full max-w-4xl flex-1 px-5 py-16 sm:px-8 sm:py-20">
+        <main id="main-content" className="mx-auto w-full max-w-[1180px] flex-1 px-5 py-16 sm:px-8 sm:py-20">
           {children}
         </main>
         <Footer />

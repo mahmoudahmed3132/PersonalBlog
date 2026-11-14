@@ -27,14 +27,14 @@ export default function WorkPage() {
         <div className="mt-6 flex flex-wrap gap-3">
           <Link
             href="/resume"
-            className="btn-accent inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium"
+            className="btn-accent inline-flex items-center gap-2 px-4 py-2 text-sm font-medium"
           >
             <FileText className="size-4" aria-hidden />
             View résumé
           </Link>
           <a
             href="https://www.linkedin.com/in/mahmoudhalim466/"
-            className="btn-outline inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm"
+            className="btn-outline inline-flex items-center gap-2 px-4 py-2 text-sm"
           >
             LinkedIn profile
             <ArrowUpRight className="size-4" aria-hidden />

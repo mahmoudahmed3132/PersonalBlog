@@ -60,12 +60,13 @@ export const siteConfig = {
     { label: "Apple Music", href: "https://music.apple.com/profile/mahmoudhalim466", icon: Radio },
     { label: "Email", href: "mailto:Mahmoudhalim466@gmail.com", icon: Mail },
   ],
+  tagline: "Detections, incidents, notes",
   nav: [
-    { label: "Home", href: "/", icon: Home },
+    { label: "Writing", href: "/blog", icon: BookOpen },
     { label: "Work", href: "/work", icon: BriefcaseBusiness },
     { label: "Speaking", href: "/speaking", icon: Mic },
     { label: "Projects", href: "/projects", icon: Code2 },
-    { label: "Blog", href: "/blog", icon: BookOpen },
+    { label: "Résumé", href: "/resume", icon: FileText },
   ],
   commandLinks: [
     { label: "Home", href: "/", icon: Home },
