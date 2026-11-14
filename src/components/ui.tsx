@@ -1,49 +1,85 @@
 import Link from "next/link";
 
+/**
+ * A numbered section on the twelve-column grid: hairline on top, the number
+ * and an optional label in the left gutter, a large title and actions on the right.
+ */
 export function Section({
   title,
   children,
   action,
+  actions,
   id,
+  number,
+  eyebrow,
 }: {
   title: string;
-  /** Kept for call-site compatibility; the minimal design shows only the title. */
+  /** Small caps label under the number in the gutter. */
   eyebrow?: string;
   children: React.ReactNode;
   action?: { label: string; href: string };
+  actions?: { label: string; href: string; external?: boolean }[];
   id?: string;
+  number?: number;
 }) {
+  const links = [...(action ? [action] : []), ...(actions ?? [])] as { label: string; href: string; external?: boolean }[];
   return (
-    <section className="mt-24 scroll-mt-24" id={id}>
-      <div className="flex items-baseline justify-between gap-4 border-b border-border pb-3">
-        <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
-        {action ? (
-          <Link href={action.href} className="shrink-0 text-sm text-muted transition hover:text-foreground">
-            {action.label} →
-          </Link>
-        ) : null}
+    <section className="mt-24 scroll-mt-28 border-t border-rule pt-6 sm:mt-32" id={id}>
+      <div className="grid gap-y-4 md:grid-cols-12 md:gap-x-6">
+        <div className="md:col-span-3">
+          {number ? <p className="font-mono text-xs tabular-nums">{String(number).padStart(2, "0")}</p> : null}
+          {eyebrow ? <p className="label mt-1">{eyebrow}</p> : null}
+        </div>
+        <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3 md:col-span-9">
+          <h2 className="text-4xl font-semibold tracking-tighter sm:text-5xl">{title}</h2>
+          {links.length ? (
+            <div className="flex gap-5 pb-1.5">
+              {links.map((link) =>
+                link.external ? (
+                  <a key={link.href} href={link.href} className="label text-foreground transition-opacity hover:opacity-70">
+                    {link.label} →
+                  </a>
+                ) : (
+                  <Link key={link.href} href={link.href} className="label text-foreground transition-opacity hover:opacity-70">
+                    {link.label} →
+                  </Link>
+                ),
+              )}
+            </div>
+          ) : null}
+        </div>
       </div>
-      <div className="mt-6">{children}</div>
+      <div className="mt-10">{children}</div>
     </section>
+  );
+}
+
+/** Wraps section content so it sits in columns 4–12, aligned under the title. */
+export function Indent({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div className={`grid md:grid-cols-12 md:gap-x-6 ${className}`}>
+      <div className="md:col-span-9 md:col-start-4">{children}</div>
+    </div>
   );
 }
 
 export function PageHeader({
   title,
+  eyebrow,
   description,
   children,
 }: {
   title: string;
-  /** Kept for call-site compatibility; not rendered. */
   eyebrow?: string;
   description?: string;
   children?: React.ReactNode;
 }) {
   return (
-    <div className="mb-14">
-      <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">{title}</h1>
+    <div className="mb-16">
+      {eyebrow ? <p className="label mb-4">{eyebrow}</p> : null}
+      <h1 className="text-5xl font-bold tracking-tighter sm:text-7xl">{title}</h1>
       {description ? (
-        <p className="mt-5 max-w-2xl text-pretty text-lg leading-8 text-secondary">{description}</p>
+        <p className="mt-6 max-w-2xl text-pretty text-lg leading-8 text-secondary sm:text-xl sm:leading-9">{description}</p>
       ) : null}
       {children}
     </div>
@@ -60,7 +96,7 @@ export function Card({
   className?: string;
 }) {
   const base =
-    "block rounded-lg border border-border p-5 transition-colors duration-200 hover:border-foreground/25";
+    "block border border-border p-5 transition-colors duration-200 hover:border-foreground";
   const resolved = `${base} ${className}`.trim();
 
   if (href) {
