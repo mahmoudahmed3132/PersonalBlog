@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { InkForegroundPlaceholder, InkSkyPlaceholder, InkSubjectPlaceholder } from "@/components/ink-placeholder";
+import { InkTrail } from "@/components/ink-trail";
 import { MusicNotes } from "@/components/music-notes";
 
 export type HeroLayer = {
@@ -171,6 +172,7 @@ export function InkHero({ layers, children }: { layers: [HeroLayer, HeroLayer, H
           );
         })}
         <div className="ink-scrim" />
+        <InkTrail />
       </div>
       <div className="ink-copy">{children}</div>
     </section>

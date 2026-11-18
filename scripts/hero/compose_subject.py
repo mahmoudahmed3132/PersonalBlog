@@ -11,6 +11,9 @@ import cv2
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
+sys.path.insert(0, __import__("os").path.dirname(__import__("os").path.abspath(__file__)))
+from stylize import granulation, stylize
+
 CUTOUT, OUT = sys.argv[2], sys.argv[3]
 PREVIEW = sys.argv[4] if len(sys.argv) > 4 else None
 
@@ -149,14 +152,11 @@ def draw_car():
         dp.ellipse([*C(ex - 38, 250), *C(ex + 38, 190)], fill=255)
         brush_path(di, Cs(arc_pts(ex, 220, 34, 0, 360, 24)), lw * 0.7, taper=False)
 
-    # hatching on the lower body (below the crease), clipped to the body
-    hatch = Image.new("L", size, 0)
-    dh = ImageDraw.Draw(hatch)
-    for x in range(-600, 4800, 55):
-        brush_path(dh, Cs([(x, 170), (x + 260, 420)]), lw * 0.35, jitter=0.6)
-    lower = Image.new("L", size, 0)
-    ImageDraw.Draw(lower).polygon(Cs([(0, 140), (4639, 140), (4639, 360), (3330, 362), (1500, 392), (0, 440)]), fill=255)
-    hatch_a = np.minimum(np.asarray(hatch), np.minimum(np.asarray(lower), np.asarray(paper)))
+    # carbon side skirt between the arches, and the QF front-fender vent
+    di.polygon(Cs([(WR + ARCH_R + 20, 150), (WF - ARCH_R - 20, 150), (WF - ARCH_R - 30, 215), (WR + ARCH_R + 30, 228)]), fill=255)
+    for i in range(3):
+        vx = WF - ARCH_R - 140 - i * 70
+        brush_path(di, Cs([(vx + 40, 560), (vx - 30, 420)]), lw * 1.1)
 
     # wheels: solid tyre, paper rim with five round windows (QF "teledial"), hub
     for wc in (WR, WF):
@@ -188,12 +188,21 @@ def draw_car():
         return np.asarray(img.filter(ImageFilter.GaussianBlur(blur)) if blur else img, np.float32) / 255
 
     wash_a = down(wash, 18) * 0.55
-    return down(paper), np.maximum(down(ink), down(Image.fromarray(hatch_a))), down(red), wash_a
+    paper_d = down(paper)
+    # body shading as sumi wash: darkens toward the sill, a lighter band under the shoulder line
+    ys = np.arange(H, dtype=np.float32)[:, None]
+    y_crease, y_sill = GROUND - 380 * K, GROUND - 150 * K
+    y_shoulder = GROUND - 880 * K
+    lower = np.clip((ys - y_crease) / (y_sill - y_crease), 0, 1) ** 0.8 * 0.85
+    upper = np.exp(-(((ys - (y_shoulder + 18)) / 22) ** 2)) * 0.35
+    body_wash = np.clip(lower + upper, 0, 1) * np.ones((1, W), np.float32) * paper_d
+    body_wash *= granulation((H, W), rng, scale=1.5)
+    return paper_d, down(ink), down(red), wash_a, body_wash
 
 
 # ---------------------------------------------------------------- Mahmoud (raster ink stylization)
-S = 0.70
-RIGHT_CANVAS = 1500  # canvas x of photo x=1400 (crop right edge)
+S = 0.85
+RIGHT_CANVAS = 1560  # canvas x of photo x=1400 (crop right edge)
 TOP_ORIG, FADE_START, FADE_END = 40, 800, 975
 TOP_CANVAS = 1190 - (FADE_END - TOP_ORIG) * S  # he stands closer to the camera than the car
 
@@ -207,7 +216,7 @@ def person_layers():
     # headphones, drawn in photo coordinates so they sit on his ear and crown
     hp = Image.new("L", (w, h), 0)
     hd = ImageDraw.Draw(hp)
-    brush_path(hd, [(1194, 172), (1196, 145), (1199, 120), (1204, 100), (1210, 86), (1218, 78), (1228, 75)], 22, taper=False)
+    brush_path(hd, [(1194, 196), (1195, 160), (1197, 135), (1200, 114), (1204, 98), (1209, 87), (1215, 81)], 24, taper=True)
     hd.ellipse([1158, 160, 1228, 262], fill=255)  # ear cup
     hp_a = np.asarray(hp, np.float32) / 255
     cup_hi = Image.new("L", (w, h), 0)
@@ -216,24 +225,15 @@ def person_layers():
     brush_path(ImageDraw.Draw(cup_hi), [(1182, 165), (1185, 140), (1189, 118), (1194, 100)], 5, taper=True)
     cup_hi_a = np.asarray(cup_hi, np.float32) / 255
 
-    # ink from tone: solids, hatching, and DoG contour lines
-    g = cv2.GaussianBlur(gray, (0, 0), 1.2)
-    solid = np.clip((62 - g) / 14, 0, 1)
-    dog = cv2.GaussianBlur(gray, (0, 0), 1.0) - cv2.GaussianBlur(gray, (0, 0), 2.2)
-    lines = np.clip((-dog - 3.5) / 4, 0, 1)
+    cover0, ink, pwash = stylize(
+        bgr, alpha, rng,
+        head_box=(1080, 40, 1320, 250),
+        skin_boxes=[(1050, 90, 1290, 330), (860, 410, 1075, 560)],
+    )
     yy, xx = np.mgrid[0:h, 0:w]
-    hatch1 = (((xx + yy) % 9) < 2).astype(np.float32)
-    hatch2 = (((xx - yy) % 9) < 2).astype(np.float32)
-    mid = np.clip((150 - g) / 60, 0, 1) * (1 - solid)
-    hatching = np.maximum(hatch1 * (mid > 0.25), hatch2 * (mid > 0.7)) * 0.9
-    ink = np.maximum.reduce([solid * dry_brush((h, w), density=0.012, angle=-62), lines, hatching])
-    ink *= np.clip(cv2.erode(alpha, np.ones((3, 3), np.uint8)), 0, 1)  # only inside his silhouette
     ink = np.maximum(ink, hp_a)
     ink = np.where(cup_hi_a > 0, 0, ink)
-
-    # silhouette outline, slightly heavier than the interior lines
-    edge = cv2.morphologyEx((alpha > 0.5).astype(np.uint8), cv2.MORPH_GRADIENT, np.ones((5, 5), np.uint8)).astype(np.float32)
-    ink = np.maximum(ink, edge)
+    pwash = pwash * (1 - hp_a)
 
     cover = np.maximum(alpha, hp_a)
     # dissolve into the paper below the waist with a ragged dry-brush edge
@@ -245,35 +245,42 @@ def person_layers():
     fade = cv2.GaussianBlur(fade, (0, 0), 0.8)
     cover *= fade
     ink *= fade
+    pwash *= fade
 
     # place on the canvas
     x0 = int(840)
     crop = (slice(TOP_ORIG - 20, FADE_END + 5), slice(x0, 1400))
-    cover_c, ink_c = cover[crop], ink[crop]
+    cover_c, ink_c, wash_c = cover[crop], ink[crop], pwash[crop]
     nh, nw = int(cover_c.shape[0] * S), int(cover_c.shape[1] * S)
     cover_c = cv2.resize(cover_c, (nw, nh), interpolation=cv2.INTER_AREA)
     ink_c = cv2.resize(ink_c, (nw, nh), interpolation=cv2.INTER_AREA)
+    wash_c = cv2.resize(wash_c, (nw, nh), interpolation=cv2.INTER_AREA)
     px = int(RIGHT_CANVAS - (1400 - x0) * S)
     py = int(TOP_CANVAS - 20 * S)
-    P_cover, P_ink = np.zeros((H, W), np.float32), np.zeros((H, W), np.float32)
+    P_cover, P_ink, P_wash = (np.zeros((H, W), np.float32) for _ in range(3))
     P_cover[py : py + nh, px : px + nw] = cover_c
     P_ink[py : py + nh, px : px + nw] = ink_c
-    return P_cover, P_ink, (px, py)
+    P_wash[py : py + nh, px : px + nw] = wash_c
+    return P_cover, P_ink, P_wash, (px, py)
 
 
 def main():
-    car_paper, car_ink, car_red, wash = draw_car()
-    p_cover, p_ink, origin = person_layers()
+    car_paper, car_ink, car_red, wash, car_body_wash = draw_car()
+    p_cover, p_ink, p_wash, origin = person_layers()
 
     alpha = np.clip(np.maximum.reduce([car_paper, car_ink, wash, p_cover]), 0, 1)
     # colour: car first, then the person on top
     col = np.zeros((H, W, 3), np.float32) + PAPER
+    bw = (car_body_wash * 0.55)[..., None]
+    col = col * (1 - bw) + INK * bw
     car_ink_tex = car_ink * dry_brush((H, W), density=0.06, angle=-12)
     col = col * (1 - car_ink_tex[..., None]) + INK * car_ink_tex[..., None]
     col = col * (1 - car_red[..., None]) + RED * car_red[..., None]
     shadow_only = wash * (1 - np.maximum(car_paper, car_ink))
     col = np.where(shadow_only[..., None] > 0, INK * 0.6 + PAPER * 0.4, col)
     col = col * (1 - p_cover[..., None]) + PAPER * p_cover[..., None]
+    pw = (p_wash * 0.55)[..., None]
+    col = col * (1 - pw) + INK * pw
     col = col * (1 - p_ink[..., None]) + INK * p_ink[..., None]
 
     out = np.dstack([col, alpha * 255]).clip(0, 255).astype(np.uint8)

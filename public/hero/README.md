@@ -15,10 +15,13 @@ requests a file that isn't there.
 ## The current subject layer
 
 `layer-1-subject.png` is generated, not drawn by hand. It's Mahmoud cut out of
-`public/speaking/speaking-networking.jpg`, converted to ink style (solid blacks,
-hatching, contour lines, and a waist that dissolves into dry-brush strokes), with
-headphones added, standing in front of a Giulia Quadrifoglio drawn as brush-ink
-vector art with a red cloverleaf. Rebuild it with:
+`public/speaking/speaking-networking.jpg` and stylized in an Inoue-like way
+(`scripts/hero/stylize.py`): curly hair with white strands carved out of solid
+black, jacket folds cut out as white dry-brush strokes, XDoG line work on the
+face and hands, grey sumi wash with granulation instead of hatching, a
+variable-weight outline, and a waist that dissolves into brush strokes. Headphones
+are drawn on. Behind him is a Giulia Quadrifoglio in brush ink, with wash
+shading, a carbon sill, the fender vent and a red cloverleaf. Rebuild with:
 
 ```sh
 pip install --target /tmp/pylib opencv-python-headless numpy pillow
@@ -26,16 +29,19 @@ python3 -I scripts/hero/cutout.py /tmp/pylib public/speaking/speaking-networking
 python3 -I scripts/hero/compose_subject.py /tmp/pylib /tmp/cutout.png /tmp/subject.png
 ```
 
-Then quantize it to 64 colours and save it here. The second script prints the
+Then quantize it to 96 colours and save it here. The second script prints the
 ear-cup position. If you move the subject, update `CUP` in
-`src/components/music-notes.tsx` to match. A real illustration with the same
-name and specs replaces it. Sky and foreground are still the procedural SVG layers.
+`src/components/music-notes.tsx` to match (the note group sits a little above
+the cup). A real illustration with the same name and specs replaces it. Sky
+and foreground are still the procedural SVG layers.
 
 ## Motion
 
 - The pointer moves the layers by ±10/26/52 px (back to front), with spring easing.
 - After 2.2 s without pointer movement, and always on touch screens, the scene drifts on its own.
 - Ink music notes rise from the ear cup, the grass sways, and the sky mist drifts.
+- An ink brush trail follows the cursor across the hero (fat when slow, thin when fast,
+  fading like wet ink), and a click flicks an ink splatter. Fine pointers only.
 - `prefers-reduced-motion` turns all of it off.
 
 ## Specs (all three layers)
