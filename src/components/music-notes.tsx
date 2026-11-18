@@ -5,7 +5,7 @@
  */
 
 /** Ear cup position in layer-1-subject.png, in canvas px. */
-const CUP = { x: 1362, y: 610 };
+const CUP = { x: 1384, y: 505 };
 
 const INK = "#141210";
 
